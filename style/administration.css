@@ -1,0 +1,49 @@
+
+#tableau th{
+    border-left:1px solid black;
+    font-size:20px;
+    text-align:center;
+}
+
+
+
+#tableau td{
+    font-size:15px;
+    text-align:center;
+    height:40px;
+}
+
+#tableau tr{
+    border-bottom:2px solid #00CCFF;
+    padding:10px;
+    
+    
+}
+
+
+
+
+#tableau{
+    border:2px solid red;
+    border-radius:20px;
+    height:500px;
+    overflow: auto;
+    background-color:#CCFF66;
+}
+
+.rond{
+    border: 2px dotted red;
+    border-radius:15px;
+    padding:2px;
+
+}
+
+
+#in{
+    width:170px;
+    
+}
+
+.savoir{
+    margin:5px;
+}

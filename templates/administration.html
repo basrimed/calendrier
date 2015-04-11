@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Connexion Calendrier</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" href="style/administration.css" type="text/css" />
+        {% include 'include/biblio.html' %}
+
+    </head>
+    
+    
+    <body>
+        
+
+  {% include 'include/navigation.html' %}
+    
+  <div class="container">
+    
+      <div class="row">
+          <div class="col-sm-offset-4 col-sm-6">
+                <div class="row" id="listeutilisateur">
+                    <div class="col-sm-offset-1 col-sm-11" >
+                        <table id="enter">
+                            <tr>
+                                <td>
+                        <div class="input-group" id="in" >
+                            <input type="text" class="form-control" id="recherche" name="recherche" aria-describedby="sizing-addon3">
+                            <span class="input-group-addon" id="reboot">O</span></span>
+                        </div>
+                            </td>
+                            <td>
+                                
+                            <select name="niveau" id="niveau">
+                                <option value="-1" selected >*</option>
+                                <option value="2">Admin</option>
+                                <option value="1">Normal</option>
+                                <option value="0">Restreint</option>
+                            </select>
+                                
+                        <button type="button" class="btn btn-default btn-sm" id="r_create"> <div class="glyphicon glyphicon-pencil"></div> </button>
+                        <button type="button" class="btn btn-default btn-sm" id="r_update"> <div class="glyphicon glyphicon-wrench"></div> </button>
+                        <button type="button" class="btn btn-default btn-sm" id="r_delete"><div class="glyphicon glyphicon-remove"></div></button>
+                        
+                        <button class="btn btn-primary btn-sm" id="lance_recherche" ><span class="glyphicon glyphicon-search"></span> Recercher</button>
+                       </td>
+                       </tr>
+                       </table>
+                    </div>
+                
+                      <div  id="tableau" >
+
+                      </div> 
+                      <p>
+                              <div class="glyphicon glyphicon-pencil savoir">Creation</div> 
+                              <div class="glyphicon glyphicon-wrench savoir">Modification</div>
+                              <div class="glyphicon glyphicon-remove savoir">Suppression</div><br>
+                          <button type="button" class="btn btn-default btn-sm savoir">*</button>tous les utilisateurs. 
+                          <button type="button" class="btn btn-success btn-sm savoir">*</button>Utilisateurs qui n'ont pas le droit <br>
+                          <button type="button" class="btn btn-warning btn-sm savoir">*</button>Utilisateurs qui demande le droit 
+                          <button type="button" class="btn btn-danger btn-sm savoir">*</button>Utilisateurs qui possede de droit <br>
+                          <span class='rond'> <input type="checkbox" disabled></span>Ce que veut l'utilisateur.
+                      </p>
+                      
+               
+                    
+                </div>  
+
+          </div>
+          
+          
+      </div>
+  
+  
+ 
+  
+  
+  </div>
+        <script type="text/javascript" src="script/administration.js"></script>
+    
+    </body>
+</html>

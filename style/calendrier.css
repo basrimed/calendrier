@@ -1,0 +1,35 @@
+#calendrier th,#calendrier td{
+    border:1px solid black;
+
+    vertical-align:text-top;
+    
+    width:150px;
+    
+   /* min-height:300px;*/
+    
+    overflow:hidden;
+
+}
+
+ table{
+    
+}
+
+
+ tr{
+max-height:20px;
+}
+
+/*
+
+ tr{
+    height:20px;
+    max-height:20px;
+    overflow:auto;
+}
+
+*/
+
+.down{
+    background-color:#E9967A;
+}

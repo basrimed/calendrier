@@ -1,0 +1,32 @@
+.formulaire{ 
+    border:2px solid red;
+    border-radius:20px;
+    background-color:#CCFF66;
+    
+}
+
+
+.formulaire .row{
+margin-top:10px;
+}
+
+
+
+
+.container  h2{
+    text-decoration:underline;
+}
+
+
+.question{
+    font-weight:bold;
+    font-size:15px;
+}
+          
+          
+.rond{
+    border: 2px dotted red;
+    border-radius:15px;
+    padding:1px;
+
+}

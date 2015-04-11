@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Connexion Calendrier</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" href="style/cadre.css" type="text/css" />
+        {% include 'include/biblio.html' %}
+
+    </head>
+    
+    
+    <body>
+        
+
+  {% include 'include/navigation.html' %}
+    
+    <div class="container">
+
+      <div class="row">
+        <div class="col-sm-offset-4 col-sm-5 formulaire">
+          
+                <div class="row">
+                    <h2>Mon compte</h2> 
+                </div>
+          
+                <div class="row">
+                    <div class="col-sm-6">Compte :</div>  
+                    <div class="col-sm-6"> 
+                        {% if app.session.get('level')==0 %} 
+                        Restreint
+                        {% elseif app.session.get('level')==1 %} 
+                        Normal
+                        {% elseif app.session.get('level')==2 %}
+                        Administrateur
+                        {% endif %} 
+                    </div> 
+                </div>
+          
+                <div class="row">
+                    <div class="col-sm-6">Pseudo :</div>  
+                    <div class="col-sm-6"> {{ app.session.get('login') }} </div> 
+                </div>
+          
+          
+                <div class="row">
+                    <div class="col-sm-6">vos droit :</div>  
+                    <div class="col-sm-6"> 
+                    
+                                <span id="r_create" {% if app.session.get('r_create')==1 %}
+                                                    class='rond'
+                                                    {% endif %}>  
+                                                        <input type="checkbox" id="b_create" name="r_create" value="create"  
+                                                            {% if app.session.get('r_create')==2 %}
+                                                            checked disabled
+                                                            {% elseif app.session.get('r_create')==1 %}
+                                                            checked
+                                                            {% endif %}
+                                                            data-create_id={{ app.session.get('id') }}
+                                                            /> 
+                                </span> creation <br/>
+                                
+                                
+                                  
+                                <span id="r_update"     {% if app.session.get('r_update')==1 %}
+                                                        class='rond'
+                                                        {% endif %}>  
+                                                        <input type="checkbox" id="b_update" name="r_update" value="update" 
+                                                            {% if app.session.get('r_update')==2 %}
+                                                            checked disabled
+                                                            {% elseif app.session.get('r_update')==1 %}
+                                                            checked
+                                                            {% endif %}
+                                                            data-update_id={{ app.session.get('id') }}
+                                                            />
+                                </span>modification <br/>
+                                  
+                                
+                                <span id="r_delete"    {% if app.session.get('r_delete')==1 %}
+                                                        class='rond'
+                                                        {% endif %}>
+                                                          <input type="checkbox" id="b_delete" name="r_delete" value="delete" 
+                                                            {% if app.session.get('r_delete')==2 %}
+                                                            checked disabled
+                                                            {% elseif app.session.get('r_delete')==1 %}
+                                                            checked
+                                                            {% endif %}
+                                                            data-delete_id={{ app.session.get('id') }}
+                                                            />
+                                </span> supression
+                </div> 
+            </div>
+            
+            
+            
+            
+            
+            
+                <div class="row"> 
+                        <div class="col-sm-offset-6 col-sm-6">
+                            <a href="#" class="btn btn-large btn-primary" id="changemdp" rel="popover" data-content='
+                                <form  name="changemdp" method="post" action="">
+                                            <p>
+                                                Mot de passe actuel :
+                                                <input type="password"  name="password1" />
+                                            </p>
+                                            <p>
+                                                Nouveau mot de passe :
+                                                <input type="password"  name="password2" />
+                                            </p>
+                                            <p>
+                                                Repeter mot de passe :
+                                                <input type="password" name="password3" />
+                                            </p>
+                                            <p>
+                                                <input type="submit" name="Submit" value="Submit" />
+                                            </p>
+                                </form>
+                                                    ' data-placement="top" data-original-title="Changement de mot de passe">Changer mot de passe</a>
+            
+                        </div>
+        </div>
+        
+        
+
+        </div>
+        
+        
+        <div class="row">
+                <div class="col-sm-offset-4 col-sm-5">
+                <span class='rond'> <input type="checkbox"/> </span> droit en attente de validation <br/>
+                <input type="checkbox" checked disabled/>  droit valider
+            </div>
+        </div>
+      
+        
+      
+  </div>
+
+        <script type="text/javascript" src="script/compte.js"></script>
+        
+        
+    </body>
+</html>

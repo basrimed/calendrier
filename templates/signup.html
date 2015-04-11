@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Connexion Calendrier</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" href="style/cadre.css" type="text/css" />
+        {% include 'include/biblio.html' %}
+    </head>
+    
+    
+    <body>
+        
+
+  {% include 'include/navigation.html' %}
+    
+  <div class="container">
+    
+    <form  method="POST" action="/signup">
+
+      <div class="row">
+        <div class="col-sm-offset-4 col-sm-5 formulaire">
+          
+          <div class="row">
+            <h2>Nouveau utilisateur</h2> 
+          </div>
+          
+          <div class="row">
+            <div class="col-sm-6">Pseudo :</div>  
+            <div class="col-sm-6"> <input type="text" name="login" required/> </div> 
+          </div>
+          
+          <div class="row">
+            <div class="col-sm-6">Mot de Passe :</div>  
+            <div class="col-sm-6"> <input type="password" name="password1"/> </div> 
+          </div>
+          
+          <div class="row">
+            <div class="col-sm-6">retapez Mot de Passe :</div>  
+            <div class="col-sm-6"> <input type="password" name="password2"/> </div> 
+          </div>
+          
+          <div class="row">
+            <div class="col-sm-6">choisir vos droit (selon validation de l'admin):</div>  
+            <div class="col-sm-6"> 
+                                  <input type="checkbox" name="droit[]" value="create" /> creation <br/>
+                                  <input type="checkbox" name="droit[]" value="update" /> modification <br/>
+                                  <input type="checkbox" name="droit[]" value="delete" /> supression
+            </div> 
+            
+            <div class="row">
+              <div class="col-sm-offset-6 col-sm-6">
+                <input type="submit" name="Envoyer"/>
+                </div>
+            </div>
+          </div>
+          
+          
+          
+        </div>
+        
+      </div>
+      
+
+  
+  
+  
+    </form>
+  
+  </div>
+        
+        
+        
+        
+    </body>
+</html>

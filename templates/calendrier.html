@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Connexion Calendrier</title>
+        <meta charset="UTF-8"/>
+     <!--   <link rel="stylesheet" href="style/bootstrap-3.3.4-dist/css/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="style/bootstrap-3.3.4-dist/css/bootstrap-dialog.css" type="text/css" />
+        <link rel="stylesheet" href="style/navigation.css" type="text/css" /> -->
+        
+        
+        <link rel="stylesheet" href="style/calendrier.css" type="text/css" />
+        {% include 'include/biblio.html' %}
+            
+                
+                
+        
+        <script type="text/javascript" >
+        var time="{{ time }}" ; 
+        var title_calendrier="{{ calendrier }}" ;
+        var level="{{ app.session.get('level') }}"  ; 
+        var login="{{ app.session.get('login') }}" ;
+        var r_update="{{ app.session.get('r_update') }}" ;
+        var r_create="{{ app.session.get('r_create') }}" ;
+        var r_delete="{{ app.session.get('r_delete') }}" ;
+        
+        </script>
+        
+    </head>
+    
+    
+    <body>
+        {% include 'include/navigation.html' %}
+    
+    
+        <div class="container" id="container">
+            <div class="row">
+                <div class="col-sm-2">
+                    <button id="semainePrecedente" class="btn btn-primary"><span class="glyphicon glyphicon-fast-backward"></span> semaine precedente</button>
+                </div>
+                
+                <div class="col-sm-offset-8 col-sm-2">
+                    <button id="semaineSuivante" class="btn btn-primary"> semaine suivante <span class="glyphicon glyphicon-fast-forward"></span></button>
+                </div>
+                
+            </div>
+            
+            
+
+            <div class="row">
+                <div class="col-sm-12" id="calendrier"></div>    
+
+            </div>
+            
+            
+            
+            
+            
+            
+            
+    <div class="modal fade" id="formulaire">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+             <!-- <button type="button" class="close" data-dismiss="modal">x</button> -->
+              <h4 class="modal-title">Evenement :</h4>
+            </div>
+            <div class="modal-body">
+                
+              <form id='formulaire' method="POST">
+                  
+                  <table>
+                        <tr>
+                          <th>Debut de l'evenement:</th>
+                          <td id="debut_evenement" ></td>
+                        </tr>
+                        <tr>
+                          <th>Fin de l'evenement:</th>
+                          <td id="fin_evenement" ></td>
+                        </tr>
+                        <tr>
+                          <th>Titre de l'evenement:</th>
+                          <td> <input type="text" id="titre" name="titre"/> </td>
+                        </tr>
+                      
+                        <tr>
+                          <th>Description:</th>
+                          <td> <textarea id="description" name="description"  > </textarea> </td>
+                        </tr>
+                      
+                        <tr>
+                          <td></td>
+                          <td> <input class="btn btn-primary btn-sm" type="submit" id='valider' value="Valider"/></td>
+                        </tr>
+                  </table>
+                  
+                  <input type="hidden" id="id_event" name="id_event" value="-1"/>
+                  <input type="hidden" id="type" name="type" value=""/>
+                  <input type="hidden" id="calendrier" name="calendrier" value="{{ calendrier }}"/>
+                  <input type="hidden" id="time" name="time" value="{{ time }}"/>
+                  <input type="hidden" id="date_debut_evenement" name="date_debut_evenement" value=""/>
+                  <input type="hidden" id="date_fin_evenement" name="date_fin_evenement" value=""/>
+
+                
+                
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-info" data-dismiss="modal" onclick="sup_last_action()" >Annuler</button>
+            </div>
+          </div>
+        </div>
+      </div>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </div>
+    
+    
+    
+    
+
+   <!-- <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+    <script src="script/bootstrap-tooltip.js"></script>
+    <script src="script/bootstrap-popover.js"></script>
+    
+    <script type="text/javascript" src="style/bootstrap-3.3.4-dist/js/bootstrap.min.js"> </script>
+    
+    
+    
+            <script src="style/bootstrap-3.3.4-dist/js/bootstrap-dialog.js"></script>    -->
+            
+    <script type="text/javascript" src="script/calendrier.js"></script>
+        
+    </body>
+</html>
