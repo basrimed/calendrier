@@ -201,9 +201,14 @@ function change(n_event){
 
 
 function sup(n_event){
+    BootstrapDialog.confirm("confirmer la suppression de l\'evenement",function(confirmation){
+        if(confirmation){
             document.getElementById("type").value=2;
             document.getElementById("id_event").value=resultat[n_event].id_event;
-            document.getElementById("valider").click();
+            document.getElementById("valider").click();        
+        }
+    });
+
 }
 
 

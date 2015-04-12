@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Europe/Paris');
 
 // On charge le framework Silex
 require_once 'silex/vendor/autoload.php';
@@ -98,9 +99,9 @@ $app->match("/signup",function(Application $app,Request $req){
     $password=sha1($password1);
     
     try{
-        $q=$app['db']->prepare("INSERT INTO users (login,password,level,r_create,r_update,r_delete)
-                                    VALUES(?,?,?,?,?,?)");
-        $q->execute( array($login,$password,0,$r_create,$r_update,$r_delete) );
+        $q=$app['db']->prepare("INSERT INTO users (login,password,level,r_create,r_update,r_delete,date_create)
+                                    VALUES(?,?,?,?,?,?,?)");
+        $q->execute( array($login,$password,0,$r_create,$r_update,$r_delete,date("Y-m-d H:i:s") ) );
     }catch(Doctrine\DBAL\DBALException $e){
         return $app->redirect("/?error=3");
     }
@@ -207,12 +208,15 @@ $app->match("/administration",function(Application $app,Request $req){
 
 
 $app->match("/recherche_utilisateur",function(Application $app, Request $req){
+    
+    if($app['session']->get('level')!=2) return $app->redirect('/');
 
     $login= htmlspecialchars( $req->query->get("r") );
     $r_create= htmlspecialchars( $req->query->get("r_create") );
     $r_update= htmlspecialchars( $req->query->get("r_update") );
     $r_delete= htmlspecialchars( $req->query->get("r_delete") );
     $level= htmlspecialchars( $req->query->get("niveau") );
+    $order= htmlspecialchars( $req->query->get("order") );
     
     //return $login.$r_create.$r_update.$r_delete.$level;
     
@@ -228,6 +232,8 @@ $app->match("/recherche_utilisateur",function(Application $app, Request $req){
     if($r_delete!=-1)   {$sql.=" $where_and r_delete=$r_delete ";$where_and=" AND ";}
     
     if($level!=-1)   {$sql.=" $where_and level=$level ";}
+    
+    $sql.=$order;
     
     try{
         $reponse=$app['db']->fetchAll($sql);

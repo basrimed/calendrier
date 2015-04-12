@@ -2,6 +2,7 @@ var $=document.querySelector.bind(document);
 var r_create=-1;
 var r_update=-1;
 var r_delete=-1;
+var order="";
 
 window.onload=liste();
 
@@ -18,7 +19,7 @@ function liste(){
     var checkbox;
     var span;
     var xhr=new XMLHttpRequest();
-    xhr.open("GET","/recherche_utilisateur?r="+$("#recherche").value+"&r_create="+r_create+"&r_update="+r_update+"&r_delete="+r_delete+"&niveau="+$('#niveau').value,true);
+    xhr.open("GET","/recherche_utilisateur?r="+$("#recherche").value+"&r_create="+r_create+"&r_update="+r_update+"&r_delete="+r_delete+"&niveau="+$('#niveau').value+"&order="+order,true);
     xhr.responseType = 'json';
     xhr.onload=function(event){
         var resultat=xhr.response;
@@ -26,7 +27,8 @@ function liste(){
         var table=document.createElement('table');
             lig=document.createElement('tr');
                 col=document.createElement('th');
-                col.innerHTML="Login";
+                col.innerHTML="Login <a data-order='logup' onclick='ordre(this)' class='glyphicon glyphicon-arrow-up'></a>"+ 
+                                "<a data-order='logdown' onclick='ordre(this)' class='glyphicon glyphicon-arrow-down'></a>";
                 lig.appendChild(col);
                 
                 col=document.createElement('th');
@@ -44,6 +46,11 @@ function liste(){
                 col=document.createElement('th');
                 col.innerHTML="delete";
                 lig.appendChild(col);
+                
+                col=document.createElement('th');
+                col.innerHTML="Date de creation <a data-order='dateup' onclick='ordre(this)' class='order glyphicon glyphicon-arrow-up'></a>"+
+                                "<a data-order='datedown' onclick='ordre(this)' class=' order glyphicon glyphicon-arrow-down'></a> ";
+                lig.appendChild(col);
             table.appendChild(lig);
             
             
@@ -51,7 +58,7 @@ function liste(){
                 lig=document.createElement('tr');
                     col=document.createElement('td');
                         attribut = document.createAttribute('colspan');
-                        attribut.nodeValue = 5;
+                        attribut.nodeValue = 6;
                         col.setAttributeNode(attribut);
                     col.innerHTML="Pas de resultat";
                 lig.appendChild(col);
@@ -188,6 +195,13 @@ function liste(){
                 }
                 else col.appendChild(checkbox);
             lig.appendChild(col);
+            
+            
+            col=document.createElement('td');
+            col.innerHTML=resultat[temp].date_create;
+            lig.appendChild(col);
+            
+            
 
         table.appendChild(lig);
         }
@@ -217,13 +231,33 @@ function changement_droit(e){
     else if (classe=='level')   xhr.send("type="+classe+"&id="+e.dataset['level_id']+"&valeur="+e.value);
         
     else ;
+    return 1;
     
 }
 
 
 
 
-
+function ordre(e){
+    switch (e.dataset.order) {
+        case 'logup':
+            order=" ORDER BY login DESC";
+            break;
+        case 'logdown':
+            order=" ORDER BY login ASC";
+            break;
+        case 'dateup':
+            order=" ORDER BY date_create DESC";
+            break;
+        case 'dateup':
+            order=" ORDER BY date_create ASC";
+            break;
+        default:
+            order="";
+    }
+    liste();
+    return 1;
+}
 
 
 
@@ -246,6 +280,7 @@ $("#r_create").onclick=function(e){
         $("#r_create").className="btn btn-default btn-sm";
     }
     liste();
+    return 1;
 }
 
 
@@ -271,6 +306,7 @@ $("#r_update").onclick=function(e){
         $("#r_update").className="btn btn-default btn-sm";
     }
     liste();
+    return 1;
 }
 
 
@@ -298,11 +334,13 @@ $("#r_delete").onclick=function(e){
         $("#r_delete").className="btn btn-default btn-sm";
     }
     liste();
+    return 1;
 }
 
 
 $("#niveau").onchange=function(){
     liste();
+    return 1;
 }
 
 
@@ -316,6 +354,7 @@ $("#reboot").onclick=function(e){
  $("#niveau").options[0].selected=true;
  $("#recherche").value="";
  liste();
+ return 1;
 }
 
 
