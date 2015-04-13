@@ -9,6 +9,7 @@
     max-width:150px;
     
     max-height:30px;
+    overflow:hidden;
 }
 
 
@@ -23,26 +24,11 @@
 
 
 
-
-
- table{
-    
-}
-
-
- tr{
+#calendrier tr{
 max-height:20px;
+overflow:hidden;
 }
 
-/*
-
- tr{
-    height:20px;
-    max-height:20px;
-    overflow:auto;
-}
-
-*/
 
 .down{
     background-color:#E9967A;

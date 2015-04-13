@@ -31,8 +31,8 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(),
   
 $app->match("/",function(Application $app,Request $req){
     
-    $metode_formulaire=$req->getmethod();
-    if($metode_formulaire=='GET') return $app['twig']->render("calendrier.html",array("time"=>strtotime("last Monday") ,"level"=>$app['session']->get('level') , "calendrier"=>"test" ) ); //date("Y-m-d H:i:s")
+    $metode_formulaire=$req->getmethod();/*****************************/
+    if($metode_formulaire=='GET') return $app['twig']->render("calendrier.html",array("time"=>strtotime("Monday") ,"level"=>$app['session']->get('level') , "calendrier"=>"test" ) ); //date("Y-m-d H:i:s")
     
 
     $date_debut_evenement=$req->get("date_debut_evenement");

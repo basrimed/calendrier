@@ -3,7 +3,6 @@ var level; //level est initialisé dynamiquement sur la page html
 time=(time*1000); //on formate la date en millisecondes
 
 
-
 var date=[];
 var calendrier=[];
 var semaine=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
@@ -12,13 +11,16 @@ var valeur_modiication=0;
 var pop_select=0;
 var modal_o_n=0;
 var resultat;
+var evenement_proche=-1;
+var last_alert=-1;
 
 /*
 create_table(time); 
 recup_event(time);
+
+var date_heure_actuel= new Date();
+date_heure_actuel= formatage_date( date_heure_actuel )+" "+formatage_heure( date_heure_actuel  ) ;
 */
-
-
 
 setInterval(modification_o_n,500);
 
@@ -54,7 +56,7 @@ document.onselectstart=function(){
 
 
 document.getElementById("semaineSuivante").onclick=function(){
-    time+=3600*24*7*1000;   // 1 heurre * 24 = >1 jour * 7 => 1 semaine * 1000 => 1 semaine en millisecondes 
+    time+=3600*24*7*1000;   // 1 heure * 24 = >1 jour * 7 => 1 semaine * 1000 => 1 semaine en millisecondes 
     document.getElementById('time').value=time/1000;
     create_table(time);
     recup_event(time);
@@ -62,7 +64,7 @@ document.getElementById("semaineSuivante").onclick=function(){
 
 
 document.getElementById("semainePrecedente").onclick=function(){
-    time-=3600*24*7*1000;   // 1 heurre * 24 => 1 jour * 7 => 1 semaine * 1000 => 1 semaine en millisecondes
+    time-=3600*24*7*1000;   // 1 heure * 24 => 1 jour * 7 => 1 semaine * 1000 => 1 semaine en millisecondes
     document.getElementById('time').value=time/1000;
     create_table(time);
     recup_event(time);
@@ -78,6 +80,7 @@ var date_fin_evenement;
 var action=new Array();
 
 document.getElementById("calendrier").onmousedown=function(e){
+    if (e.which==3) return 0;
     var cellule=e.target;
     $(".pop").popover('hide');
     if(modal_o_n==1){
@@ -107,8 +110,8 @@ document.getElementById("calendrier").onmousedown=function(e){
             return -1;
         }
     
-    date_debut_evenement=cellule.dataset['date_heurre'];
-    date_fin_evenement=cellule.dataset['date_heurre'];
+    date_debut_evenement=cellule.dataset['date_heure'];
+    date_fin_evenement=cellule.dataset['date_heure'];
         var x=cellule.dataset['x'];
             y=cellule.dataset['y'];
             calendrier[x][y].className='down';
@@ -143,8 +146,8 @@ document.getElementById("calendrier").onmouseover=function(e){
     calendrier[x][y].className='down';
     action.push(x);
     
-        if( calendrier[x][y].dataset['date_heurre'] > date_fin_evenement ) date_fin_evenement=calendrier[x][y].dataset['date_heurre'];
-        if( calendrier[x][y].dataset['date_heurre'] < date_debut_evenement ) date_debut_evenement=calendrier[x][y].dataset['date_heurre'];
+        if( calendrier[x][y].dataset['date_heure'] > date_fin_evenement ) date_fin_evenement=calendrier[x][y].dataset['date_heure'];
+        if( calendrier[x][y].dataset['date_heure'] < date_debut_evenement ) date_debut_evenement=calendrier[x][y].dataset['date_heure'];
 }
 
 
@@ -269,7 +272,7 @@ function create_table(time){
     
     var tr=document.createElement('tr');
         th=document.createElement('th');
-        th.innerHTML='Date/heurre ';
+        th.innerHTML='Date/heure ';
     tr.appendChild(th);
         
     for(var i=0;i<7;i++){
@@ -290,17 +293,17 @@ function create_table(time){
     table.appendChild(tr);
     
     
-var heurre=0;
+var heure=0;
 var minute="";
 for(var i=0;i<48;i++){
-var heurre_formater;
+var heure_formater;
     tr=document.createElement('tr');
         var td=document.createElement('td');
         
-        if(heurre<10) heurre_formater="0"+heurre;
-        else  heurre_formater=heurre;
+        if(heure<10) heure_formater="0"+heure;
+        else  heure_formater=heure;
         
-        td.innerHTML=heurre_formater;
+        td.innerHTML=heure_formater;
             if(i%2==0)     minute=':00:00';
             else           minute=':30:00';
             td.innerHTML+=minute;
@@ -313,13 +316,13 @@ var heurre_formater;
         calendrier[i][j]=document.createElement('td') ;//td=document.createElement('td');
             calendrier[i][j].dataset['x']=i;
             calendrier[i][j].dataset['y']=j;
-            calendrier[i][j].dataset['date_heurre']=formatage_date(date[j])+" "+heurre_formater+""+minute ;            
+            calendrier[i][j].dataset['date_heure']=formatage_date(date[j])+" "+heure_formater+""+minute ;            
                 
        tr.appendChild(calendrier[i][j]);
         }
     table.appendChild(tr);
     
-    if(i%2!=0) heurre+=1;
+    if(i%2!=0) heure+=1;
 }
     document.getElementById("calendrier").innerHTML="";  
     //$('#calendrier').append(table).fadeIn('slow');
@@ -347,8 +350,26 @@ function formatage_date(date_non_formater){
                         
                         if(date_non_formater.getDate()<10) date_formater+='-0'+date_non_formater.getDate();
                         else date_formater+='-'+date_non_formater.getDate();
-                        
             return date_formater;
+}
+
+
+
+
+function formatage_heure(heure_non_formater){
+    heure_non_formater=new Date( heure_non_formater );
+    var heure_formater;
+    
+            if( heure_non_formater.getHours()<10 ) heure_formater="0"+heure_non_formater.getHours()+":";
+            else  heure_formater=heure_non_formater.getHours()+":";
+            
+            if( heure_non_formater.getMinutes()<10 ) heure_formater+="0"+heure_non_formater.getMinutes()+":";
+            else  heure_formater+=heure_non_formater.getMinutes()+":";
+            
+            if( heure_non_formater.getSeconds()<10 ) heure_formater+="0"+heure_non_formater.getSeconds();
+            else  heure_formater+=heure_non_formater.getSeconds();
+
+            return heure_formater;
 }
 
 
@@ -377,7 +398,19 @@ function recup_event(time_debut){
             for ( var j = 0; j < 48; j++ ) {
                 if(k==nb_resultat) return 1;
 
-                    if(calendrier[j][i].dataset['date_heurre'] == resultat[k].date_start && modification_en_cour!=1 ) {
+                    if(calendrier[j][i].dataset['date_heure'] == resultat[k].date_start && modification_en_cour!=1 ) {
+                        if(  (new Date()  <  new Date(resultat[k].date_start)) && evenement_proche==-1 && last_alert!=resultat[k].id_event ){
+                            
+                        evenement_proche =   new Date(resultat[k].date_start) - new Date()   ;
+                        evenement_proche-=30 * 60 * 1000 ;
+                        if (evenement_proche<0) evenement_proche=0;
+                        setTimeout(function(){
+                            BootstrapDialog.alert("Un Evenement se deroule dans moins de 15 minute !!" );
+                            evenement_proche=-1;
+                        },evenement_proche);
+                        last_alert=resultat[k].id_event;
+                            
+                        }
                                   
                                 calendrier[j][i].className="down";       //rel
                                 calendrier[j][i].innerHTML=" <a class=\"pop\"  rel='popover' id='pop"+resultat[k].id_event+"'  data-original-title=' <h4 class=\"pop\">"+resultat[k].creator+" -- "+resultat[k].title_event+"</h4>' data-content='<p class=\"pop\">"+resultat[k].description+"</p>'> <span data-clic='nan' class='glyphicon glyphicon-eye-open'></span> </a>" ;
@@ -412,7 +445,7 @@ function recup_event(time_debut){
                         //calendrier[j][i].className="down";
                     }
                     
-                    if(calendrier[j][i].dataset['date_heurre'] == resultat[k].date_end && modification_en_cour==1 ) {
+                    if(calendrier[j][i].dataset['date_heure'] == resultat[k].date_end && modification_en_cour==1 ) {
                         
                   
                               var attribut = document.createAttribute('rowspan');
