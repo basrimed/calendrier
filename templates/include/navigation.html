@@ -41,7 +41,7 @@
           {% if app.session.get('login') is defined  and app.session.get('login') is not null %}
           <form class="navbar-form navbar-right inline-form" method="POST" action="/signout">
             <div class="form-group">
-              <span class="label label-info" id="lastco">Derniere connexion:{{ app.session.get('lastco') }}</span>
+             <!-- <span class="label label-info" id="lastco">Derniere connexion:{{ app.session.get('lastco') }}</span> -->
               <span class="label label-success" id="affichepseudo">{{app.session.get('login')}}</span>
               
               <!--

@@ -4,7 +4,8 @@
         <title>Connexion Calendrier</title>
         <meta charset="UTF-8"/>
         <link rel="stylesheet" href="style/cadre.css" type="text/css" />
-        {% include 'include/biblio.html' %}
+        <link rel="stylesheet" href="style/bootstrap-3.3.4-dist/css/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="style/navigation.css" type="text/css" />
     </head>
     
     
@@ -40,11 +41,11 @@
           </div>
           
           <div class="row">
-            <div class="col-sm-6">choisir vos droit (selon validation de l'admin):</div>  
+            <div class="col-sm-6">choisir vos droit (selon validation par l'admin):</div>  
             <div class="col-sm-6"> 
                                   <input type="checkbox" name="droit[]" value="create" /> creation <br/>
-                                  <input type="checkbox" name="droit[]" value="update" /> modification <br/>
-                                  <input type="checkbox" name="droit[]" value="delete" /> supression
+                                  <input type="checkbox" name="droit[]" value="update" /> modification* <br/>
+                                  <input type="checkbox" name="droit[]" value="delete" /> supression*
             </div> 
             
             <div class="row">
@@ -60,7 +61,11 @@
         
       </div>
       
-
+      <div class="row">
+        <div class="col-sm-offset-4 col-sm-5" > 
+        * Un utilisateur a toujours le droit de modifier ou suprimer ses propres evenements, 
+          definir les droits pour les evenements creer par d'autres utilisateurs
+        </div>
   
   
   

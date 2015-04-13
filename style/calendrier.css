@@ -1,15 +1,29 @@
 #calendrier th,#calendrier td{
     border:1px solid black;
-
     vertical-align:text-top;
-    
-    width:150px;
-    
-   /* min-height:300px;*/
-    
     overflow:hidden;
-
 }
+
+#calendrier td{
+    width:150px;
+    max-width:150px;
+    
+    max-height:30px;
+}
+
+
+#calendrier tr>td:nth-child(1) , #calendrier tr>th:nth-child(1) {
+    border:1px solid blue;
+    width:70px;
+}
+
+#calendrier tr>th {
+    border:1px solid blue;
+}
+
+
+
+
 
  table{
     
