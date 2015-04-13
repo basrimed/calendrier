@@ -22,6 +22,19 @@ var date_heure_actuel= new Date();
 date_heure_actuel= formatage_date( date_heure_actuel )+" "+formatage_heure( date_heure_actuel  ) ;
 */
 
+function getCookie(sName) {
+        var oRegex = new RegExp("(?:; )?" + sName + "=([^;]*);?");
+ 
+        if (oRegex.test(document.cookie)) {
+                return decodeURIComponent(RegExp["$1"]);
+        } else {
+                return null;
+        }
+}
+
+
+
+
 setInterval(modification_o_n,500);
 
 
@@ -399,17 +412,21 @@ function recup_event(time_debut){
                 if(k==nb_resultat) return 1;
 
                     if(calendrier[j][i].dataset['date_heure'] == resultat[k].date_start && modification_en_cour!=1 ) {
-                        if(  (new Date()  <  new Date(resultat[k].date_start)) && evenement_proche==-1 && last_alert!=resultat[k].id_event ){
-                            
+                        if(  (new Date()  <  new Date(resultat[k].date_start)) && getCookie('last_alert')==resultat[k].id_event ) evenement_proche=0;
+                        if(  (new Date()  <  new Date(resultat[k].date_start)) && getCookie('last_alert')!=resultat[k].id_event && evenement_proche!=0){
                         evenement_proche =   new Date(resultat[k].date_start) - new Date()   ;
+                        
                         evenement_proche-=30 * 60 * 1000 ;
                         if (evenement_proche<0) evenement_proche=0;
+                        
                         setTimeout(function(){
                             BootstrapDialog.alert("Un Evenement se deroule dans moins de 15 minute !!" );
-                            evenement_proche=-1;
                         },evenement_proche);
-                        last_alert=resultat[k].id_event;
-                            
+                        evenement_proche=0;
+
+                        
+                            document.cookie="last_alert="+resultat[k].id_event;
+                             //alert(getCookie('last_alert'));
                         }
                                   
                                 calendrier[j][i].className="down";       //rel
@@ -426,12 +443,9 @@ function recup_event(time_debut){
                                         }
                                 }
                                         
-                                        
-                                        
-                                        
-                                        
-                                    $(".pop").popover({html:true});
+                                    //$(".pop").popover({html:true});
                                     //$("#pop"+resultat[k].id_event).popover({html:true});
+                                    setTimeout( function(){  $(".pop").popover({html:true});    },2*1000);
                                     
                                 calendrier[j][i].innerHTML+="<br><b>createur:</b> "+resultat[k].creator+" <br><b>Titre: </b>"+resultat[k].title_event+" <br> <b>Description: </b>"+resultat[k].description;
 
@@ -458,10 +472,12 @@ function recup_event(time_debut){
             }
         }
         //$(".pop").popover();/**********************/
+        
     };
     
     xhr.send("calendrier="+title_calendrier+"&date_start="+formatage_date(date_debut)+" 00:00:00&date_end="+formatage_date(date_fin)+" 00:00:00");
 }
+
 
 
 

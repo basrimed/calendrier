@@ -6,90 +6,34 @@ $.urlParam = function(name){
 // example.com?param1=name&amp;param2=&amp;id=6
 var erreur=$.urlParam('erreur'); // name
 
-alert(erreur);
+
 
 
 switch (erreur) {
-    case 1:
-        // code
+    case "1":
+        alert("echec lors de l'authentification login/mot de passe incorrect");
         break;
         
-    case 2:
-        // code
+    case "2":
+        alert("echec, les mots de passe ne correspondent pas");
         break;
         
-    case 3:
-        // code
+    case "3":
+        alert("echec, lors de l'insertion en BDD");
         break;
         
-    case 4:
-        // code
+    case "4":
+        alert("echec, lors du select en BDD");
         break;
         
-    case 5:
-        // code
+    case "5":
+        alert("echec, valeur du parametre non attendu");
         break;
         
-    case 6:
-        // code
-        break;
-        
-    case 7:
-        // code
-        break;
-        
-    case 8:
-        // code
-        break;
-        
-    case 9:
-        // code
-        break;
-        
-    case 10:
-        // code
-        break;
-        
-    case 11:
-        // code
-        break;
-        
-    case 12:
-        // code
-        break;
-        
-    case 13:
-        // code
-        break;
-        
-    case 14:
-        // code
-        break;
-        
-    case 15:
-        // code
-        break;
-        
-    case 16:
-        // code
-        break;
-        
-    case 17:
-        // code
-        break;
-        
-    case 18:
-        // code
-        break;
-        
-    case 19:
-        // code
-        break;
-        
-    case 20:
-        // code
+    case "6":
+        alert("echec, lors de la mise a jour en BDD");
         break;
     
     default:
-        // code
+        alert("echec, erreur non attendu");
 }

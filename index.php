@@ -67,7 +67,7 @@ $app->match("/",function(Application $app,Request $req){
 
         $q=$app['db']->executeUpdate("UPDATE modif SET valeur=valeur+1 WHERE title_calendrier=?",array( $calendrier ) );
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/?error=19");
+        return $app->redirect("/?erreur=6");
     }
     
     return $app['twig']->render("calendrier.html",array("time"=>$time ,"level"=>$app['session']->get('level') , "calendrier"=>$calendrier ) );
@@ -95,7 +95,7 @@ $app->match("/signup",function(Application $app,Request $req){
         if($var=='delete') $r_delete=1;
     }
     
-    if( $login=="" || $password1!=$password2 ) $app->redirect("/?error=2");
+    if( $login=="" || $password1!=$password2 ) $app->redirect("/?erreur=2");
     $password=sha1($password1);
     
     try{
@@ -103,7 +103,7 @@ $app->match("/signup",function(Application $app,Request $req){
                                     VALUES(?,?,?,?,?,?,?)");
         $q->execute( array($login,$password,0,$r_create,$r_update,$r_delete,date("Y-m-d H:i:s") ) );
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/?error=3");
+        return $app->redirect("/?erreur=3");
     }
     
     return $app->redirect("/");
@@ -124,12 +124,12 @@ $app->match("/compte",function(Application $app,Request $req){
     $password2=$req->get('password2');
     $password3=$req->get('password3');
 
-    if($password1!=$password || $password2!=$password3) return $app->redirect("/compte?error=12");
+    if($password1!=$password || $password2!=$password3) return $app->redirect("/compte?erreur=2");
         $password2=sha1($password2);
             try{
             $q=$app['db']->executeUpdate("UPDATE users SET password=? WHERE id_user=?",array($password2,$id));
             }catch(Doctrine\DBAL\DBALException $e){
-                return $app->redirect("/compte?error=13");
+                return $app->redirect("/compte?erreur=6");
             }
     $app['session']->set('password',$password2);
     return $app->redirect("/compte");
@@ -164,17 +164,17 @@ $app->match("/signin",function(Application $app,Request $req){
     try{
         $reponse=$app['db']->executeQuery($sql)->fetch();
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/?error=15");  
+        return $app->redirect("/?erreur=3");  
     }
     
-    if($reponse['password']!=$password) return $app->redirect("/?error=1");
+    if($reponse['password']!=$password) return $app->redirect("/?erreur=1");
     
     //c'est correct on cree la session
     $app['session']->set('lastco',$reponse['lastco']);
             try{
                 $q=$app['db']->executeUpdate("UPDATE users SET lastco=? WHERE id_user=?",array( date("Y-m-d H:i:s") ,$reponse['id_user']) );
             }catch(Doctrine\DBAL\DBALException $e){
-                return $app->redirect("/?error=17");  
+                return $app->redirect("/?erreur=6");  
             }
     $level=$reponse['level'];
     $r_update=$reponse['r_update'];
@@ -240,7 +240,7 @@ $app->match("/recherche_utilisateur",function(Application $app, Request $req){
     try{
         $reponse=$app['db']->fetchAll($sql);
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/administration?erreur=5");
+        return $app->redirect("/administration?erreur=4");
     }
     
     return $app->json($reponse);
@@ -267,20 +267,20 @@ $app->match("/changement_droit",function(Application $app, Request $req){
         else if($type=='update')    $type='r_update';
         else if($type=='delete')    $type='r_delete';
         else if($type=='level')     $type='level';
-        else return $app->redirect('/administration?erreur=6');
+        else return $app->redirect('/administration?erreur=5');
         
         if($type!='level'){
             if($valeur=='true') $valeur=2;
             else $valeur=0;
         }
         
-        if($valeur!=2 && $valeur!=1 && $valeur!=0) return $app->redirect('/administration?erreur=7');
+        if($valeur!=2 && $valeur!=1 && $valeur!=0) return $app->redirect('/administration?erreur=5');
         
         try{
             $q=$app['db']->executeUpdate("UPDATE users SET $type=? WHERE id_user=?",array($valeur,$id));
             
         }catch(Doctrine\DBAL\DBALException $e){
-           return $app->redirect('/administration?erreur=8');
+           return $app->redirect('/administration?erreur=3');
         }
         
         return $app->abort(200,"Ok");
@@ -302,15 +302,15 @@ $app->match("/changement_droit_this",function(Application $app, Request $req){
         if($type=='create')         $type='r_create';
         else if($type=='update')    $type='r_update';
         else if($type=='delete')    $type='r_delete';
-        else return $app->redirect('/compte?erreur=14');
+        else return $app->redirect('/compte?erreur=5');
         
-        if($valeur!=1 && $valeur!=0) return $app->redirect('/administration?erreur=7');
+        if($valeur!=1 && $valeur!=0) return $app->redirect('/administration?erreur=5');
     
         try{
             $q=$app['db']->executeUpdate("UPDATE users SET $type=? WHERE id_user=?",array($valeur,$id));
             
         }catch(Doctrine\DBAL\DBALException $e){
-           return $app->redirect('/compte?erreur=9');
+           return $app->redirect('/compte?erreur=6');
         }
         $app['session']->set($type,$valeur);
         
@@ -333,7 +333,7 @@ $app->match("/recup_event",function(Application $app,Request $req){
     try{
         $reponse=$app['db']->fetchAll($sql);
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/?erreur=20");
+        return $app->redirect("/?erreur=4");
     }
     
     return $app->json($reponse);
@@ -352,7 +352,7 @@ $app->match("/recup_modif",function(Application $app,Request $req){
     try{
         $reponse=$app['db']->executeQuery($sql)->fetch();
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/?erreur=20");
+        return $app->redirect("/?erreur=4");
     }
     
     return $reponse['valeur'];
