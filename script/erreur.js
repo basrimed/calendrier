@@ -3,8 +3,7 @@ $.urlParam = function(name){
     return results[1] || 0;
 }
  
-// example.com?param1=name&amp;param2=&amp;id=6
-var erreur=$.urlParam('erreur'); // name
+var erreur=$.urlParam('erreur');
 
 
 switch (erreur) {

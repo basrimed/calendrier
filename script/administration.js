@@ -9,6 +9,7 @@ window.onload=liste();
 $("#recherche").onchange=liste;
 
 
+
 function liste(){
     var temp;
     var lig;
@@ -216,6 +217,8 @@ function liste(){
 };
 
 
+
+//L'administrateur decide de changer un droit sur un utilisateur
 function changement_droit(e){
     var classe=e.className;
     var xhr= new XMLHttpRequest();
@@ -237,7 +240,7 @@ function changement_droit(e){
 
 
 
-
+//On ait appelle a cette fonction depuis HTML
 function ordre(e){
     switch (e.dataset.order) {
         case 'logup':
@@ -336,6 +339,7 @@ $("#r_delete").onclick=function(e){
     liste();
     return 1;
 }
+
 
 
 $("#niveau").onchange=function(){

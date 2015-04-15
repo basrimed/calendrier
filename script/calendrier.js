@@ -38,6 +38,10 @@ modification_o_n();
 
 
 
+//Fonction qui interroge la BDD pour voir s'il y a eu des modifications sur un calendrier
+//si oui, on charge les eveenements de la semaine visité par l'utilisateur.
+//si l'utilisateur fait appel à un calendrier qui n'existe pas on lui propose de créer le calendrier
+
 function modification_o_n(){
     var xhr=new XMLHttpRequest();
     xhr.open("POST","/calendrier/recup_modif");
@@ -54,7 +58,6 @@ function modification_o_n(){
                                                         }
                                                         else document.location.href="/defaut"; 
                                                     });
-        
         else if(valeur_modification==xhr.response) ;
         else{
             $('.modal').modal('hide');
@@ -82,6 +85,7 @@ document.onselectstart=function(){
 }
 
 
+//Fonction pour faire avancer le calendrier d'une semaine, on charge les événements de la nouvelle semaine sélectionnée
 document.getElementById("semaineSuivante").onclick=function(){
     time+=3600*24*7*1000;   // 1 heure * 24 = >1 jour * 7 => 1 semaine * 1000 => 1 semaine en millisecondes 
     document.getElementById('time').value=time/1000;
@@ -90,6 +94,7 @@ document.getElementById("semaineSuivante").onclick=function(){
 }
 
 
+//Fonction pour faire reculer le calendrier d'une semaine, on charge les événements de la nouvelle semaine sélectionnée
 document.getElementById("semainePrecedente").onclick=function(){
     time-=3600*24*7*1000;   // 1 heure * 24 => 1 jour * 7 => 1 semaine * 1000 => 1 semaine en millisecondes
     document.getElementById('time').value=time/1000;
@@ -98,9 +103,8 @@ document.getElementById("semainePrecedente").onclick=function(){
 }
 
 
-
+//Fonction pour chaner la semaine (la semaine est choisie via une liste de date), on charge les événements de la nouvelle semaine sélectionnée
 document.getElementById("choix_semaine").onchange=function(){
-    
     time=parseInt (document.getElementById("choix_semaine").options[document.getElementById('choix_semaine').selectedIndex].value );  // 1 heure * 24 => 1 jour * 7 => 1 semaine * 1000 => 1 semaine en millisecondes
     document.getElementById('time').value=time/1000;
     create_table(time);
@@ -110,25 +114,33 @@ document.getElementById("choix_semaine").onchange=function(){
 
 
 
-//BootstrapDialog.confirm('Hi Apple, are you sure?');
 
 //Selection d'un nouveau evenement
 var y;
 var date_debut_evenement;
 var date_fin_evenement;
+
+//On stocke les derniere action d'un utilisateur, pour pouvoir les annuler.
 var action=new Array();
 
 document.getElementById("calendrier").onmousedown=function(e){
-    if (e.which==3) return 0;
+    if (e.which==3) return 0; //on élimine les actions faite par un bouton droit de la souris.
     var cellule=e.target;
+    
+    //on annule les dernieres action dans le cas ou un utilisateur a commencer a créé un evenement alors qu'il n'a pas valider/annuler  
+    //un dernier evenement qu'il a commencer a créé.
     $(".pop").popover('hide');
     if(modal_o_n==1){
         sup_last_action();
         modal_o_n=0;
     }
     
+    //si l'utilisateur click sur un evenement deja créé, on fait rien on sort
     if( cellule.className=='pop' || cellule.dataset['clic']=='nan' ) return 0;
     
+    
+    //gestion des droits qu'a un utilisateur sur un calendrier
+    //il y a d'autres vérifications côté serveur, si jamais l'utilisateur manipule du JS
     if( level!="0" && level!="1" && level!="2"  ) {
         BootstrapDialog.alert('Veuillez vous connectez pour pouvoir interagire avec le calendrier !!');
         return -1;
@@ -149,18 +161,22 @@ document.getElementById("calendrier").onmousedown=function(e){
             return -1;
         }
     
+    //si tous est bon pour ce bouton gauche, on commence a selectioner un nouveau evenement
+    //On stocke les informations utile pour la suite
+    //On passe de l'etat "neutre" a "en train de selectioner un nouveau evenement"
     date_debut_evenement=cellule.dataset['date_heure'];
     date_fin_evenement=cellule.dataset['date_heure'];
         var x=cellule.dataset['x'];
             y=cellule.dataset['y'];
             calendrier[x][y].className='down';
             action.push(x);
-            
             etat_souris=1;
 }
 
 
 
+//si on est dans l'etat "en train de selectioner un nouveau evenement", 
+//l'action de cette fonction veut dire que l'utilisateur alonge la durré de l"evenement 
 document.getElementById("calendrier").onmouseover=function(e){
     if(etat_souris!=1) return 0;
 
@@ -168,23 +184,21 @@ document.getElementById("calendrier").onmouseover=function(e){
         var x=cellule.dataset['x'];
         var j=cellule.dataset['y'];
            
-            //l'utilisateur change de Jour      
+            //l'utilisateur change de jour(basculement d'une colonne vers une autre), on annule la sélection
             if(y!=j){
                 sup_last_action();
                 BootstrapDialog.alert('Veuillez respecter la continuité de votre Evenement !!');
                 return -1;
             }
                 
-            //l'utilisateur entre en collision avec un autre evenement
+            //l'utilisateur entre en collision avec un autre evenement, on annule la selection 
             if(cellule.className=='down') { // && etat_souris==1){
                 sup_last_action();
                 BootstrapDialog.alert('Veuillez ne pas heurter d\'autre Evenement !!');
                 return -1;
             }
-    
     calendrier[x][y].className='down';
     action.push(x);
-    
         if( calendrier[x][y].dataset['date_heure'] > date_fin_evenement ) date_fin_evenement=calendrier[x][y].dataset['date_heure'];
         if( calendrier[x][y].dataset['date_heure'] < date_debut_evenement ) date_debut_evenement=calendrier[x][y].dataset['date_heure'];
 }
@@ -192,7 +206,10 @@ document.getElementById("calendrier").onmouseover=function(e){
 
 
 
-
+//si on est dans l'etat "en train de selectioner un nouveau evenement", 
+// et que le bouton de la souris est relaché => l'utilisateur a créer un evenement, 
+//il ne lui reste plus qu'à remplir les informations lié à cet événement.
+//l'utilisateur a toujours la possibilité d'annuler cet événement.
 document.querySelector("body").onmouseup=function(e){
             if(etat_souris==0) return -1;
             etat_souris=0;
@@ -210,6 +227,7 @@ document.querySelector("body").onmouseup=function(e){
             date_debut_evenement="";
             date_fin_evenement="";
             
+            //On ouvre une interface pour que l'utilisateur puisse saisir les informations de l'événement qu'il vient de créer
             $('.modal').modal('show');
             modal_o_n=1;
         
@@ -218,8 +236,11 @@ document.querySelector("body").onmouseup=function(e){
 
 
 
+
+//Fonction utilisé pour pouvoir modifier un evenement.
+//Qui peut modifier un evenement? => un admin, le propriétaire de l'evenement, des utilisateurs à qui on a donné
+//le droit de modifier des événements qui ne leur appartiennent pas.
 function change(n_event){
-    
             document.getElementById("date_debut_evenement").value=resultat[n_event].date_start;
             document.getElementById("date_fin_evenement").value=resultat[n_event].date_end;
             
@@ -234,8 +255,7 @@ function change(n_event){
             document.getElementById("titre").value=resultat[n_event].title_event;
             document.getElementById("description").value=resultat[n_event].description;
             
-            /********************************************************/
-                        $('.modal').modal('show');
+            $('.modal').modal('show');
             modal_o_n=1;
  
 }
@@ -243,7 +263,7 @@ function change(n_event){
 
 
 
-
+//meme chose que la fonction chane() mais cette fois c'est pour la suppression
 function sup(n_event){
     BootstrapDialog.confirm("confirmer la suppression de l\'evenement",function(confirmation){
         if(confirmation){
@@ -253,7 +273,6 @@ function sup(n_event){
             document.getElementById("valider").click();        
         }
     });
-
 }
 
 
@@ -264,23 +283,21 @@ function sup(n_event){
 
 
 
-
+//Fonction qui supprime les dernières actions d'un utilisateur
 function sup_last_action(){
         for(var i in action)   calendrier[ action[i] ] [y].className='';  
         action=new Array();
         etat_souris=0;
-        
-                //var attribut = document.createAttribute('rowspan');
-            //attribut.nodeValue =1 ;
-            //calendrier[ min_action() ][y].setAttributeNode(attribut);
-        
-        
         return true;
 }
 
 
 
 
+
+
+//Un utilisateur peut commencer à sélection un événement soit en partant par l'as ou par le haut
+//on doit don récupérer la date min et Max de l'ensemble des cases selectioner par l'utilisateur
 function max_action(){
     var max=-1;
     for(var i in action){
@@ -288,7 +305,6 @@ function max_action(){
     }
     return max;
 }
-
 
 
 function min_action(){
@@ -373,85 +389,14 @@ var heure_formater;
                 
        tr.appendChild(calendrier[i][j]);
         }
+        
     table.appendChild(tr);
-    
     if(i%2!=0) heure+=1;
-}
-    document.getElementById("calendrier").innerHTML="";  
-    //$('#calendrier').append(table).fadeIn('slow');
-    document.getElementById("calendrier").appendChild(table);
-}
-
-
-
-
-
-
-
-
-
-
-function formatage_date_inverse(date_non_formater){
-    date_non_formater=new Date( date_non_formater );
-    var date_formater;
-            if(date_non_formater.getDate()<10) date_formater='0'+date_non_formater.getDate();
-            else date_formater=date_non_formater.getDate();
-            
-            var mois=date_non_formater.getMonth()+1; //Java script retourne le mois entre 0 et 11, on formate la valeur du mois
-            if(mois<10) date_formater+='/0'+mois;
-            else date_formater+='/'+mois;
-            
-            date_formater+='/'+date_non_formater.getFullYear();
-            return date_formater;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-function formatage_date(date_non_formater){
-    date_non_formater=new Date( date_non_formater );
-    var date_formater;
+    }
     
-            date_formater=date_non_formater.getFullYear()+"-";
-
-                        var mois=date_non_formater.getMonth()+1;  //Java script retourne le mois entre 0 et 11, on formate la valeur du mois
-                        
-                        if(mois<10) date_formater+='0'+mois;
-                        else date_formater+=mois;
-                        
-                        if(date_non_formater.getDate()<10) date_formater+='-0'+date_non_formater.getDate();
-                        else date_formater+='-'+date_non_formater.getDate();
-            return date_formater;
+document.getElementById("calendrier").innerHTML="";  
+document.getElementById("calendrier").appendChild(table);
 }
-
-
-
-
-function formatage_heure(heure_non_formater){
-    heure_non_formater=new Date( heure_non_formater );
-    var heure_formater;
-    
-            if( heure_non_formater.getHours()<10 ) heure_formater="0"+heure_non_formater.getHours()+":";
-            else  heure_formater=heure_non_formater.getHours()+":";
-            
-            if( heure_non_formater.getMinutes()<10 ) heure_formater+="0"+heure_non_formater.getMinutes()+":";
-            else  heure_formater+=heure_non_formater.getMinutes()+":";
-            
-            if( heure_non_formater.getSeconds()<10 ) heure_formater+="0"+heure_non_formater.getSeconds();
-            else  heure_formater+=heure_non_formater.getSeconds();
-
-            return heure_formater;
-}
-
 
 
 
@@ -528,7 +473,6 @@ function recup_event(time_debut){
                     
                     if(calendrier[j][i].dataset['date_heure'] == resultat[k].date_end && modification_en_cour==1 ) {
                         
-                  
                               var attribut = document.createAttribute('rowspan');
                                 attribut.nodeValue = j - j_debut +1 ;
                                 calendrier[j_debut][i_debut].setAttributeNode(attribut);
@@ -538,14 +482,75 @@ function recup_event(time_debut){
                     }
             }
         }
-        //$(".pop").popover();/**********************/
-        
     };
-    
     xhr.send("calendrier="+title_calendrier+"&date_start="+formatage_date(date_debut)+" 00:00:00&date_end="+formatage_date(date_fin)+" 00:00:00");
 }
 
 
+
+
+
+
+
+
+
+
+
+//retourne une date sous format DD/MM/YYYY
+function formatage_date_inverse(date_non_formater){
+    date_non_formater=new Date( date_non_formater );
+    var date_formater;
+            if(date_non_formater.getDate()<10) date_formater='0'+date_non_formater.getDate();
+            else date_formater=date_non_formater.getDate();
+            
+            var mois=date_non_formater.getMonth()+1; //Java script retourne le mois entre 0 et 11, on formate la valeur du mois
+            if(mois<10) date_formater+='/0'+mois;
+            else date_formater+='/'+mois;
+            
+            date_formater+='/'+date_non_formater.getFullYear();
+            return date_formater;
+}
+
+
+
+
+
+//retourne une date sous format YYYY-MM-DD
+function formatage_date(date_non_formater){
+    date_non_formater=new Date( date_non_formater );
+    var date_formater;
+    
+            date_formater=date_non_formater.getFullYear()+"-";
+
+                        var mois=date_non_formater.getMonth()+1;  //Java script retourne le mois entre 0 et 11, on formate la valeur du mois
+                        
+                        if(mois<10) date_formater+='0'+mois;
+                        else date_formater+=mois;
+                        
+                        if(date_non_formater.getDate()<10) date_formater+='-0'+date_non_formater.getDate();
+                        else date_formater+='-'+date_non_formater.getDate();
+            return date_formater;
+}
+
+
+
+
+//retourne une heurre sous format HH:MM:SS
+function formatage_heure(heure_non_formater){
+    heure_non_formater=new Date( heure_non_formater );
+    var heure_formater;
+    
+            if( heure_non_formater.getHours()<10 ) heure_formater="0"+heure_non_formater.getHours()+":";
+            else  heure_formater=heure_non_formater.getHours()+":";
+            
+            if( heure_non_formater.getMinutes()<10 ) heure_formater+="0"+heure_non_formater.getMinutes()+":";
+            else  heure_formater+=heure_non_formater.getMinutes()+":";
+            
+            if( heure_non_formater.getSeconds()<10 ) heure_formater+="0"+heure_non_formater.getSeconds();
+            else  heure_formater+=heure_non_formater.getSeconds();
+
+            return heure_formater;
+}
 
 
 
