@@ -28,6 +28,14 @@ tr{
     height:10%;
 }
 
+
+#choix_semaine{
+    width:150px;
+    display:inline-block;
+}
+
+
+
 /*
 
 #calendrier tr{

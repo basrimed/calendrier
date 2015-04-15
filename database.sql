@@ -224,3 +224,49 @@ valeur int DEFAULT 0
                         else calendrier[i][j].dataset['date_heurre']+='-'+date[j].getDate();
                         
                         calendrier[i][j].dataset['date_heurre']+=" "+heurre_formater+""+minute  ;*/
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+            /*
+                col=document.createElement('th');
+                col.innerHTML="Login <a data-order='logup' onclick='ordre(this)' class='glyphicon glyphicon-arrow-up'></a>"+ 
+                                "<a data-order='logdown' onclick='ordre(this)' class='glyphicon glyphicon-arrow-down'></a>";
+                lig.appendChild(col);
+                
+                col=document.createElement('th');
+                col.innerHTML="level";
+                lig.appendChild(col);
+                
+                col=document.createElement('th');
+                col.innerHTML="create";
+                lig.appendChild(col);
+                
+                col=document.createElement('th');
+                col.innerHTML="update";
+                lig.appendChild(col);
+                
+                col=document.createElement('th');
+                col.innerHTML="delete";
+                lig.appendChild(col);
+                
+                col=document.createElement('th');
+                col.innerHTML="Date de creation <a data-order='dateup' onclick='ordre(this)' class='order glyphicon glyphicon-arrow-up'></a>"+
+                                "<a data-order='datedown' onclick='ordre(this)' class=' order glyphicon glyphicon-arrow-down'></a> ";
+                lig.appendChild(col);
+                */

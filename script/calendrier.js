@@ -22,17 +22,6 @@ var date_heure_actuel= new Date();
 date_heure_actuel= formatage_date( date_heure_actuel )+" "+formatage_heure( date_heure_actuel  ) ;
 */
 
-function getCookie(sName) {
-        var oRegex = new RegExp("(?:; )?" + sName + "=([^;]*);?");
-        if (oRegex.test(document.cookie)) {
-                return decodeURIComponent(RegExp["$1"]);
-        } else {
-                return null;
-        }
-}
-
-
-
 modification_o_n();
 
 
@@ -554,3 +543,12 @@ function formatage_heure(heure_non_formater){
 
 
 
+//pour lire un cookie
+function getCookie(sName) {
+        var oRegex = new RegExp("(?:; )?" + sName + "=([^;]*);?");
+        if (oRegex.test(document.cookie)) {
+                return decodeURIComponent(RegExp["$1"]);
+        } else {
+                return null;
+        }
+}

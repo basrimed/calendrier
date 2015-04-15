@@ -48,3 +48,8 @@
 .savoir{
     margin:5px;
 }
+
+#niveau{
+    width:100px;
+    display:inline-block;
+}

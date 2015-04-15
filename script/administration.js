@@ -3,10 +3,112 @@ var r_create=-1;
 var r_update=-1;
 var r_delete=-1;
 var order="";
+var header=["Login <a data-order='logup' onclick='ordre(this)' class='glyphicon glyphicon-arrow-up'></a>"+ 
+            "<a data-order='logdown' onclick='ordre(this)' class='glyphicon glyphicon-arrow-down'></a>",
+            'level','create','update','delete',
+            "Date de creation <a data-order='dateup' onclick='ordre(this)' class='order glyphicon glyphicon-arrow-up'></a>"+
+            "<a data-order='datedown' onclick='ordre(this)' class=' order glyphicon glyphicon-arrow-down'></a> "];
+            
 
 window.onload=liste();
 
 $("#recherche").onchange=liste;
+
+
+
+
+$("#r_create").onclick=function(e){
+    if(r_create==-1){
+        r_create=0;
+        $("#r_create").className="btn btn-success btn-sm";
+    }
+    else if(r_create==0){
+        r_create=1;
+        $("#r_create").className="btn btn-warning btn-sm";
+    }
+    else if(r_create==1){
+        r_create=2;
+        $("#r_create").className="btn btn-danger btn-sm";
+    }
+    else{
+        r_create=-1;
+        $("#r_create").className="btn btn-default btn-sm";
+    }
+    liste();
+    return 1;
+}
+
+
+
+$("#r_update").onclick=function(e){
+    if(r_update==-1){
+        r_update=0;
+        $("#r_update").className="btn btn-success btn-sm";
+    }
+    else if(r_update==0){
+        r_update=1;
+        $("#r_update").className="btn btn-warning btn-sm";
+    }
+    else if(r_update==1){
+        r_update=2;
+        $("#r_update").className="btn btn-danger btn-sm";
+    }
+    else{
+        r_update=-1;
+        $("#r_update").className="btn btn-default btn-sm";
+    }
+    liste();
+    return 1;
+}
+
+
+
+
+$("#r_delete").onclick=function(e){
+    if(r_delete==-1){
+        r_delete=0;
+        $("#r_delete").className="btn btn-success btn-sm";
+    }
+    else if(r_delete==0){
+        r_delete=1;
+        $("#r_delete").className="btn btn-warning btn-sm";
+    }
+    else if(r_delete==1){
+        r_delete=2;
+        $("#r_delete").className="btn btn-danger btn-sm";
+    }
+    else{
+        r_delete=-1;
+        $("#r_delete").className="btn btn-default btn-sm";
+    }
+    liste();
+    return 1;
+}
+
+
+
+$("#niveau").onchange=function(){
+    liste();
+    return 1;
+}
+
+
+$("#reboot").onclick=function(e){
+ r_create=-1;
+ r_update=-1;
+ r_delete=-1;
+ $("#r_create").className="btn btn-default btn-sm";
+ $("#r_update").className="btn btn-default btn-sm";
+ $("#r_delete").className="btn btn-default btn-sm";
+ $("#niveau").options[0].selected=true;
+ $("#recherche").value="";
+ liste();
+ return 1;
+}
+
+
+
+
 
 
 
@@ -24,34 +126,16 @@ function liste(){
     xhr.responseType = 'json';
     xhr.onload=function(event){
         var resultat=xhr.response;
+
         
         var table=document.createElement('table');
             lig=document.createElement('tr');
+            
+            for(var i=0 ; i<6 ;i++){
                 col=document.createElement('th');
-                col.innerHTML="Login <a data-order='logup' onclick='ordre(this)' class='glyphicon glyphicon-arrow-up'></a>"+ 
-                                "<a data-order='logdown' onclick='ordre(this)' class='glyphicon glyphicon-arrow-down'></a>";
+                col.innerHTML=header[i];
                 lig.appendChild(col);
-                
-                col=document.createElement('th');
-                col.innerHTML="level";
-                lig.appendChild(col);
-                
-                col=document.createElement('th');
-                col.innerHTML="create";
-                lig.appendChild(col);
-                
-                col=document.createElement('th');
-                col.innerHTML="update";
-                lig.appendChild(col);
-                
-                col=document.createElement('th');
-                col.innerHTML="delete";
-                lig.appendChild(col);
-                
-                col=document.createElement('th');
-                col.innerHTML="Date de creation <a data-order='dateup' onclick='ordre(this)' class='order glyphicon glyphicon-arrow-up'></a>"+
-                                "<a data-order='datedown' onclick='ordre(this)' class=' order glyphicon glyphicon-arrow-down'></a> ";
-                lig.appendChild(col);
+            }   
             table.appendChild(lig);
             
             
@@ -197,13 +281,10 @@ function liste(){
                 else col.appendChild(checkbox);
             lig.appendChild(col);
             
-            
             col=document.createElement('td');
             col.innerHTML=resultat[temp].date_create;
             lig.appendChild(col);
             
-            
-
         table.appendChild(lig);
         }
         table.className="col-sm-12";
@@ -211,10 +292,10 @@ function liste(){
     $('#tableau').appendChild(table);
     }
     xhr.send(null);
-
-    
-    
 };
+
+
+
 
 
 
@@ -265,101 +346,6 @@ function ordre(e){
 
 
 
-$("#r_create").onclick=function(e){
-    if(r_create==-1){
-        r_create=0;
-        $("#r_create").className="btn btn-success btn-sm";
-    }
-    else if(r_create==0){
-        r_create=1;
-        $("#r_create").className="btn btn-warning btn-sm";
-    }
-    else if(r_create==1){
-        r_create=2;
-        $("#r_create").className="btn btn-danger btn-sm";
-    }
-    else{
-        r_create=-1;
-        $("#r_create").className="btn btn-default btn-sm";
-    }
-    liste();
-    return 1;
-}
-
-
-
-
-
-
-$("#r_update").onclick=function(e){
-    if(r_update==-1){
-        r_update=0;
-        $("#r_update").className="btn btn-success btn-sm";
-    }
-    else if(r_update==0){
-        r_update=1;
-        $("#r_update").className="btn btn-warning btn-sm";
-    }
-    else if(r_update==1){
-        r_update=2;
-        $("#r_update").className="btn btn-danger btn-sm";
-    }
-    else{
-        r_update=-1;
-        $("#r_update").className="btn btn-default btn-sm";
-    }
-    liste();
-    return 1;
-}
-
-
-
-
-
-
-
-
-$("#r_delete").onclick=function(e){
-    if(r_delete==-1){
-        r_delete=0;
-        $("#r_delete").className="btn btn-success btn-sm";
-    }
-    else if(r_delete==0){
-        r_delete=1;
-        $("#r_delete").className="btn btn-warning btn-sm";
-    }
-    else if(r_delete==1){
-        r_delete=2;
-        $("#r_delete").className="btn btn-danger btn-sm";
-    }
-    else{
-        r_delete=-1;
-        $("#r_delete").className="btn btn-default btn-sm";
-    }
-    liste();
-    return 1;
-}
-
-
-
-$("#niveau").onchange=function(){
-    liste();
-    return 1;
-}
-
-
-$("#reboot").onclick=function(e){
- r_create=-1;
- r_update=-1;
- r_delete=-1;
- $("#r_create").className="btn btn-default btn-sm";
- $("#r_update").className="btn btn-default btn-sm";
- $("#r_delete").className="btn btn-default btn-sm";
- $("#niveau").options[0].selected=true;
- $("#recherche").value="";
- liste();
- return 1;
-}
 
 
 
