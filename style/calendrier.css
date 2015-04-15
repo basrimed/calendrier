@@ -7,28 +7,40 @@
 #calendrier td{
     width:150px;
     max-width:150px;
-    
-    max-height:30px;
+    max-height:20px;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
     overflow:hidden;
 }
 
 
-#calendrier tr>td:nth-child(1) , #calendrier tr>th:nth-child(1) {
-    border:1px solid blue;
+#calendrier tr>td:nth-child(1) {
+    border:2px solid blue;
     width:70px;
 }
 
 #calendrier tr>th {
-    border:1px solid blue;
+    border:2px solid blue;
 }
 
+tr{
+    diplay:block;
+    height:10%;
+}
 
+/*
 
 #calendrier tr{
-max-height:20px;
+height:20px;
 overflow:hidden;
 }
 
+table{
+    table-layout: fixed;
+    height:600px;
+    max-height:600px;
+}
+*/
 
 .down{
     background-color:#E9967A;

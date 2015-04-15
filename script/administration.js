@@ -19,7 +19,7 @@ function liste(){
     var checkbox;
     var span;
     var xhr=new XMLHttpRequest();
-    xhr.open("GET","/recherche_utilisateur?r="+$("#recherche").value+"&r_create="+r_create+"&r_update="+r_update+"&r_delete="+r_delete+"&niveau="+$('#niveau').value+"&order="+order,true);
+    xhr.open("GET","/calendrier/recherche_utilisateur?r="+$("#recherche").value+"&r_create="+r_create+"&r_update="+r_update+"&r_delete="+r_delete+"&niveau="+$('#niveau').value+"&order="+order,true);
     xhr.responseType = 'json';
     xhr.onload=function(event){
         var resultat=xhr.response;
@@ -219,7 +219,7 @@ function liste(){
 function changement_droit(e){
     var classe=e.className;
     var xhr= new XMLHttpRequest();
-    xhr.open("POST","/changement_droit");
+    xhr.open("POST","/calendrier/changement_droit");
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     
     if(classe=='create')        xhr.send("type="+classe+"&id="+e.dataset['create_id']+"&valeur="+e.checked);

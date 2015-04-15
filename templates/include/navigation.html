@@ -8,17 +8,17 @@
           
           <ul class="nav navbar-nav">
             {% if app.session.get('level') is not null %}
-            <li> <a href="/compte">Mon compte </a> </li>
+            <li> <a href="/calendrier/compte">Mon compte </a> </li>
             {% endif %}
             
             
             {% if app.session.get('level') is defined and app.session.get('level')==2 %}
-            <li class="active"> <a href="/administration">Administration </a> </li>
+            <li class="active"> <a href="/calendrier/administration">Administration </a> </li>
             {% elseif app.session.get('level') is null %}
-            <li class="active"> <a href="/signup">Créer un compte </a> </li>
+            <li class="active"> <a href="/calendrier/signup">Créer un compte </a> </li>
             {% endif %}
             
-            <li> <a href="/propos">A propos !</a> </li>
+            <li> <a href="/calendrier/propos">A propos !</a> </li>
             
             
               
@@ -26,7 +26,7 @@
           </ul>
           
           {% if app.session.get('login') is not defined or app.session.get('login') is null  %}
-          <form class="navbar-form navbar-right inline-form" method="POST" action="/signin">
+          <form class="navbar-form navbar-right inline-form" method="POST" action="/calendrier/signin">
             <div class="form-group">
               <input type="text" class="input-sm form-control" placeholder="login" name="login">
                <input type="password" class="input-sm form-control" placeholder="mot de passe" name="password">
@@ -39,7 +39,7 @@
           
           
           {% if app.session.get('login') is defined  and app.session.get('login') is not null %}
-          <form class="navbar-form navbar-right inline-form" method="POST" action="/signout">
+          <form class="navbar-form navbar-right inline-form" method="POST" action="/calendrier/signout">
             <div class="form-group">
              <!-- <span class="label label-info" id="lastco">Derniere connexion:{{ app.session.get('lastco') }}</span> -->
               <span class="label label-success" id="affichepseudo">{{app.session.get('login')}}</span>

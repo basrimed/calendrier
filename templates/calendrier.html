@@ -31,13 +31,18 @@
         {% include 'include/navigation.html' %}
     
     
-        <div class="container" id="container">
+        <div class="container" id="container" >
             <div class="row">
                 <div class="col-sm-2">
                     <button id="semainePrecedente" class="btn btn-primary"><span class="glyphicon glyphicon-fast-backward"></span> semaine precedente</button>
                 </div>
                 
-                <div class="col-sm-offset-8 col-sm-2">
+                <div class="col-sm-offset-3 col-sm-3">
+                  semaine du :<select id="choix_semaine"></select>
+          
+                </div>
+                
+                <div class="col-sm-offset-2 col-sm-2">
                     <button id="semaineSuivante" class="btn btn-primary"> semaine suivante <span class="glyphicon glyphicon-fast-forward"></span></button>
                 </div>
                 
@@ -46,7 +51,7 @@
             
 
             <div class="row">
-                <div class="col-sm-12" id="calendrier"></div>    
+                <div class="col-sm-12" id="calendrier" ></div>    
 
             </div>
             
@@ -93,6 +98,7 @@
                   </table>
                   
                   <input type="hidden" id="id_event" name="id_event" value="-1"/>
+                  <input type="hidden" id="creator" name="creator" value=""/>
                   <input type="hidden" id="type" name="type" value=""/>
                   <input type="hidden" id="calendrier" name="calendrier" value="{{ calendrier }}"/>
                   <input type="hidden" id="time" name="time" value="{{ time }}"/>
@@ -128,7 +134,7 @@
     
     
     
-    <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+          <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
     <script type="text/javascript" src="script/bootstrap-tooltip.js"></script>
     <script type="text/javascript" src="script/bootstrap-popover.js"></script>
     <script type="text/javascript" src="style/bootstrap-3.3.4-dist/js/bootstrap.min.js"> </script>
@@ -136,6 +142,19 @@
       <script type="text/javascript" src="script/erreur.js"></script>
     <script type="text/javascript" src="script/calendrier.js"></script>
     
+    
+    
+    
+    <!--
+    
+    <script type="text/javascript" src="../script/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="../script/bootstrap-tooltip.js"></script>
+    <script type="text/javascript" src="../script/bootstrap-popover.js"></script>
+    <script type="text/javascript" src="../style/bootstrap-3.3.4-dist/js/bootstrap.min.js"> </script>
+    <script src="../style/bootstrap-3.3.4-dist/js/bootstrap-dialog.js"></script>    
+      <script type="text/javascript" src="../script/erreur.js"></script>
+    <script type="text/javascript" src="../script/calendrier.js"></script>
+    -->
         
     </body>
 </html>

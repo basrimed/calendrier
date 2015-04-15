@@ -29,15 +29,37 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(),
   
   
   
-$app->match("/",function(Application $app,Request $req){
-    
-    $metode_formulaire=$req->getmethod();/*****************************/
-    if($metode_formulaire=='GET') return $app['twig']->render("calendrier.html",array("time"=>strtotime("Monday") ,"level"=>$app['session']->get('level') , "calendrier"=>"test" ) ); //date("Y-m-d H:i:s")
-    
+$app->match("/",function(Application $app){
+    if( $app['session']->get('calendar') )  return $app->redirect("/".$app['session']->get('calendar'));
+    //$app['session']->set('calendar','test');
+  //  return   $app['session']->get('calendar')  ; //return $app->redirect("/".$app['session']->get('calendar'));
+    else return $app->redirect("/test") ;
+});
+  
+  
+  
+  
+  
+$app->match("/{a}",function(Application $app,Request $req,$a){
 
+    if($a!="favicon.ico")    $app['session']->set('calendar', $a  );
+
+    $metode_formulaire=$req->getmethod();/*****************************/
+    if($metode_formulaire=='GET') return $app['twig']->render("calendrier.html",array("time"=>strtotime("last Monday") ,"level"=>$app['session']->get('level') , "calendrier"=>$a ) ); //date("Y-m-d H:i:s")
+    
+    
+    
+    $level=$app['session']->get('level');
+    $r_create=$app['session']->get('r_create');
+    $r_update=$app['session']->get('r_update');
+    $r_delete=$app['session']->get('r_delete');
+    $login=$app['session']->get('login');
+    if( $level!=1 && $level!=2 ) return $app->redirect('?erreur=7');
+    
     $date_debut_evenement=$req->get("date_debut_evenement");
     $date_fin_evenement=$req->get("date_fin_evenement");
     
+    $creator=htmlspecialchars( $req->get("creator") ); 
     $titre=htmlspecialchars( $req->get("titre") ); 
     $calendrier=htmlspecialchars( $req->get("calendrier") );
     
@@ -49,16 +71,19 @@ $app->match("/",function(Application $app,Request $req){
     $id_event=$req->get("id_event");
     
         try{
-            if($type==0){
+            if($type==0){ 
+                 if($level!=2 && $r_create!=2 ) return $app->redirect('?erreur=7');
                 $q=$app['db']->prepare("INSERT INTO events (title_calendrier,title_event,date_start,date_end,description,creator)
                                     VALUES(?,?,?,?,?,?)");
                 $q->execute( array( $calendrier , $titre , $date_debut_evenement , $date_fin_evenement , $description , $app['session']->get('login') )  );
             }
             elseif($type==1){
+                if($level!=2 && $r_update!=2 && $creator!=$login ) return $app->redirect('?erreur=7');
                 $q=$app['db']->executeUpdate("UPDATE events SET title_event=?,description=? 
                                                     WHERE id_event=?",array( $titre , $description , $id_event ) );
             }
             elseif($type==2){
+                if($level!=2 && $r_delete!=2 && $creator!=$login  ) return $app->redirect('?erreur=7');
                 $q=$app['db']->executeUpdate("DELETE FROM events WHERE id_event=?",array( $id_event ) );
             }
             
@@ -67,7 +92,7 @@ $app->match("/",function(Application $app,Request $req){
 
         $q=$app['db']->executeUpdate("UPDATE modif SET valeur=valeur+1 WHERE title_calendrier=?",array( $calendrier ) );
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/?erreur=6");
+        return $app->redirect("?erreur=6");
     }
     
     return $app['twig']->render("calendrier.html",array("time"=>$time ,"level"=>$app['session']->get('level') , "calendrier"=>$calendrier ) );
@@ -76,7 +101,7 @@ $app->match("/",function(Application $app,Request $req){
 
 
 
-$app->match("/signup",function(Application $app,Request $req){
+$app->match("/calendrier/signup",function(Application $app,Request $req){
     
     $metode_formulaire=$req->getmethod();
     if($metode_formulaire=='GET') return $app['twig']->render("signup.html",array() );
@@ -95,7 +120,7 @@ $app->match("/signup",function(Application $app,Request $req){
         if($var=='delete') $r_delete=1;
     }
     
-    if( $login=="" || $password1!=$password2 ) $app->redirect("/?erreur=2");
+    if( $login=="" || $password1!=$password2 ) $app->redirect("?erreur=2");
     $password=sha1($password1);
     
     try{
@@ -103,7 +128,7 @@ $app->match("/signup",function(Application $app,Request $req){
                                     VALUES(?,?,?,?,?,?,?)");
         $q->execute( array($login,$password,0,$r_create,$r_update,$r_delete,date("Y-m-d H:i:s") ) );
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/?erreur=3");
+        return $app->redirect("?erreur=3");
     }
     
     return $app->redirect("/");
@@ -112,7 +137,7 @@ $app->match("/signup",function(Application $app,Request $req){
 
 
 
-$app->match("/compte",function(Application $app,Request $req){ 
+$app->match("/calendrier/compte",function(Application $app,Request $req){ 
     $metode_formulaire=$req->getmethod();
     $level=$app['session']->get('level');
     if($level==null) return $app['twig']->render("/",array() );
@@ -124,15 +149,15 @@ $app->match("/compte",function(Application $app,Request $req){
     $password2=$req->get('password2');
     $password3=$req->get('password3');
 
-    if($password1!=$password || $password2!=$password3) return $app->redirect("/compte?erreur=2");
+    if($password1!=$password || $password2!=$password3) return $app->redirect("?erreur=2");
         $password2=sha1($password2);
             try{
             $q=$app['db']->executeUpdate("UPDATE users SET password=? WHERE id_user=?",array($password2,$id));
             }catch(Doctrine\DBAL\DBALException $e){
-                return $app->redirect("/compte?erreur=6");
+                return $app->redirect("?erreur=6");
             }
     $app['session']->set('password',$password2);
-    return $app->redirect("/compte");
+    return $app->redirect("/calendrier/compte");
     
 
 });
@@ -141,7 +166,7 @@ $app->match("/compte",function(Application $app,Request $req){
 
 
 
-$app->match("/propos",function(Application $app,Request $req){
+$app->match("/calendrier/propos",function(Application $app,Request $req){ 
     return $app['twig']->render("propos.html",array() );
 });
 
@@ -151,7 +176,7 @@ $app->match("/propos",function(Application $app,Request $req){
 
 
 
-$app->match("/signin",function(Application $app,Request $req){
+$app->match("/calendrier/signin",function(Application $app,Request $req){
     
     $metode_formulaire=$req->getmethod();
     if($metode_formulaire=='GET') return $app->redirect("/");
@@ -164,17 +189,17 @@ $app->match("/signin",function(Application $app,Request $req){
     try{
         $reponse=$app['db']->executeQuery($sql)->fetch();
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/?erreur=3");  
+        return $app->redirect("?erreur=3");  
     }
     
-    if($reponse['password']!=$password) return $app->redirect("/?erreur=1");
+    if($reponse['password']!=$password) return $app->redirect("?erreur=1");
     
     //c'est correct on cree la session
     $app['session']->set('lastco',$reponse['lastco']);
             try{
                 $q=$app['db']->executeUpdate("UPDATE users SET lastco=? WHERE id_user=?",array( date("Y-m-d H:i:s") ,$reponse['id_user']) );
             }catch(Doctrine\DBAL\DBALException $e){
-                return $app->redirect("/?erreur=6");  
+                return $app->redirect("?erreur=6");  
             }
     $level=$reponse['level'];
     $r_update=$reponse['r_update'];
@@ -200,7 +225,7 @@ $app->match("/signin",function(Application $app,Request $req){
 
 
 
-$app->match("/administration",function(Application $app,Request $req){
+$app->match("/calendrier/administration",function(Application $app,Request $req){
     if( $app['session']->get('level')!=2 ) return $app->redirect("/");
     return $app['twig']->render('administration.html',array() );
 });
@@ -209,7 +234,7 @@ $app->match("/administration",function(Application $app,Request $req){
 
 
 
-$app->match("/recherche_utilisateur",function(Application $app, Request $req){
+$app->match("/calendrier/recherche_utilisateur",function(Application $app, Request $req){
     
     if($app['session']->get('level')!=2) return $app->redirect('/');
 
@@ -240,7 +265,7 @@ $app->match("/recherche_utilisateur",function(Application $app, Request $req){
     try{
         $reponse=$app['db']->fetchAll($sql);
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/administration?erreur=4");
+        return $app->redirect("?erreur=4");
     }
     
     return $app->json($reponse);
@@ -253,9 +278,9 @@ $app->match("/recherche_utilisateur",function(Application $app, Request $req){
 
 
 
-$app->match("/changement_droit",function(Application $app, Request $req){
+$app->match("/calendrier/changement_droit",function(Application $app, Request $req){
     $metode_formulaire=$req->getmethod();
-    if($metode_formulaire=="GET") return $app->redirect('/administration');
+    if($metode_formulaire=="GET") return $app->redirect('/calendrier/administration');
     if($app['session']->get('level')!=2) return $app->redirect('/');
     
     $type=htmlspecialchars($req->get('type') );
@@ -267,20 +292,20 @@ $app->match("/changement_droit",function(Application $app, Request $req){
         else if($type=='update')    $type='r_update';
         else if($type=='delete')    $type='r_delete';
         else if($type=='level')     $type='level';
-        else return $app->redirect('/administration?erreur=5');
+        else return $app->redirect('?erreur=5');
         
         if($type!='level'){
             if($valeur=='true') $valeur=2;
             else $valeur=0;
         }
         
-        if($valeur!=2 && $valeur!=1 && $valeur!=0) return $app->redirect('/administration?erreur=5');
+        if($valeur!=2 && $valeur!=1 && $valeur!=0) return $app->redirect('?erreur=5');
         
         try{
             $q=$app['db']->executeUpdate("UPDATE users SET $type=? WHERE id_user=?",array($valeur,$id));
             
         }catch(Doctrine\DBAL\DBALException $e){
-           return $app->redirect('/administration?erreur=3');
+           return $app->redirect('?erreur=3');
         }
         
         return $app->abort(200,"Ok");
@@ -289,9 +314,9 @@ $app->match("/changement_droit",function(Application $app, Request $req){
 
 
 
-$app->match("/changement_droit_this",function(Application $app, Request $req){
+$app->match("/calendrier/changement_droit_this",function(Application $app, Request $req){
     $metode_formulaire=$req->getmethod();
-    if($metode_formulaire=="GET") return $app->redirect('/compte');
+    if($metode_formulaire=="GET") return $app->redirect('/calendrier/compte');
     if($app['session']->get('level')==null) return $app->redirect('/');
     
     $type=htmlspecialchars( $req->get('type') );
@@ -302,15 +327,15 @@ $app->match("/changement_droit_this",function(Application $app, Request $req){
         if($type=='create')         $type='r_create';
         else if($type=='update')    $type='r_update';
         else if($type=='delete')    $type='r_delete';
-        else return $app->redirect('/compte?erreur=5');
+        else return $app->redirect('?erreur=5');
         
-        if($valeur!=1 && $valeur!=0) return $app->redirect('/administration?erreur=5');
+        if($valeur!=1 && $valeur!=0) return $app->redirect('?erreur=5');
     
         try{
             $q=$app['db']->executeUpdate("UPDATE users SET $type=? WHERE id_user=?",array($valeur,$id));
             
         }catch(Doctrine\DBAL\DBALException $e){
-           return $app->redirect('/compte?erreur=6');
+           return $app->redirect('?erreur=6');
         }
         $app['session']->set($type,$valeur);
         
@@ -319,7 +344,7 @@ $app->match("/changement_droit_this",function(Application $app, Request $req){
 
 
 
-$app->match("/recup_event",function(Application $app,Request $req){
+$app->match("/calendrier/recup_event",function(Application $app,Request $req){
     $metode_formulaire=$req->getmethod();
     if($metode_formulaire=="GET") return $app->redirect('/');
     
@@ -333,7 +358,7 @@ $app->match("/recup_event",function(Application $app,Request $req){
     try{
         $reponse=$app['db']->fetchAll($sql);
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/?erreur=4");
+        return $app->redirect("?erreur=4");
     }
     
     return $app->json($reponse);
@@ -341,7 +366,7 @@ $app->match("/recup_event",function(Application $app,Request $req){
 });
 
 
-$app->match("/recup_modif",function(Application $app,Request $req){
+$app->match("/calendrier/recup_modif",function(Application $app,Request $req){
     $metode_formulaire=$req->getmethod();
     if($metode_formulaire=="GET") return $app->redirect('/');
     
@@ -352,11 +377,28 @@ $app->match("/recup_modif",function(Application $app,Request $req){
     try{
         $reponse=$app['db']->executeQuery($sql)->fetch();
     }catch(Doctrine\DBAL\DBALException $e){
-        return $app->redirect("/?erreur=4");
+        return $app->redirect("?erreur=4");
     }
-    
-    return $reponse['valeur'];
+    if($reponse) return $reponse['valeur'];
+    else return -1;
+});
 
+
+
+
+
+$app->match("/calendrier/add_calendrier",function(Application $app,Request $req){
+    $metode_formulaire=$req->getmethod();
+    if($metode_formulaire=="GET") return $app->redirect('/');
+    
+    $calendrier=htmlspecialchars ($req->get('calendrier') );
+    try{
+                $q=$app['db']->prepare("INSERT INTO modif (title_calendrier,valeur)
+                                    VALUES(?,?)");
+                $q->execute( array( $calendrier,1 )  );
+    }catch(Doctrine\DBAL\DBALException $e){
+        return $app->redirect("?erreur=3");
+    }  
 });
 
 
@@ -366,7 +408,11 @@ $app->match("/recup_modif",function(Application $app,Request $req){
 
 
 
-$app->match("/signout",function(Application $app,Request $req){
+
+
+
+
+$app->match("/calendrier/signout",function(Application $app,Request $req){
     $app['session']->clear();
     $app['session']->remove('login');
     $app['session']->remove('id');
@@ -391,9 +437,6 @@ $app->match("/h/{a}",function(Application $app,Request $req,$a){
 });
 
 
-$app->match("/d",function(Application $app,Request $req){
-    return  time();
-});
 
 
 

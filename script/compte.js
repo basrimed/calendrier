@@ -13,7 +13,7 @@ placement: 'right'
 });    
     
     b_create.onchange=function(){
-      xhr.open("POST","/changement_droit_this");
+      xhr.open("POST","/calendrier/changement_droit_this");
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         
         if(b_create.checked) valeur=1;
@@ -28,7 +28,7 @@ placement: 'right'
     };
     
       b_update.onchange=function(){
-      xhr.open("POST","/changement_droit_this");
+      xhr.open("POST","/calendrier/changement_droit_this");
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       
         if(b_update.checked) valeur=1;
@@ -45,7 +45,7 @@ placement: 'right'
     
     
       b_delete.onchange=function(){
-      xhr.open("POST","/changement_droit_this");
+      xhr.open("POST","/calendrier/changement_droit_this");
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       
         if(b_delete.checked) valeur=1;

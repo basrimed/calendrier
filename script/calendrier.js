@@ -7,7 +7,7 @@ var date=[];
 var calendrier=[];
 var semaine=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
 var etat_souris=0;
-var valeur_modiication=0;
+var valeur_modification=0;
 var pop_select=0;
 var modal_o_n=0;
 var resultat;
@@ -24,7 +24,6 @@ date_heure_actuel= formatage_date( date_heure_actuel )+" "+formatage_heure( date
 
 function getCookie(sName) {
         var oRegex = new RegExp("(?:; )?" + sName + "=([^;]*);?");
- 
         if (oRegex.test(document.cookie)) {
                 return decodeURIComponent(RegExp["$1"]);
         } else {
@@ -34,25 +33,40 @@ function getCookie(sName) {
 
 
 
+modification_o_n();
 
-setInterval(modification_o_n,500);
+
 
 
 function modification_o_n(){
     var xhr=new XMLHttpRequest();
-    xhr.open("POST","/recup_modif");
+    xhr.open("POST","/calendrier/recup_modif");
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onload=function(){ 
-        if(valeur_modiication==xhr.response) ;
+        
+        if(xhr.response==-1) BootstrapDialog.confirm("Ce calendrier n'existe pas, voulez-vous le creer?",function(results){
+                                                        if(results){
+                                                            var xhr_add=new XMLHttpRequest();
+                                                            xhr_add.open("POST","/calendrier/add_calendrier");
+                                                            xhr_add.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                                            xhr_add.send("calendrier="+title_calendrier);
+                                                            setInterval(modification_o_n,500);
+                                                        }
+                                                        else document.location.href="/defaut"; 
+                                                    });
+        
+        else if(valeur_modification==xhr.response) ;
         else{
             $('.modal').modal('hide');
             if(modal_o_n==1){
                 sup_last_action();
                 modal_o_n=0;
             }
-        valeur_modiication=xhr.response
+            
+        valeur_modification=xhr.response
         create_table(time); 
         recup_event(time);
+        setInterval(modification_o_n,500);
         }
     }
     xhr.send("calendrier="+title_calendrier);
@@ -82,6 +96,18 @@ document.getElementById("semainePrecedente").onclick=function(){
     create_table(time);
     recup_event(time);
 }
+
+
+
+document.getElementById("choix_semaine").onchange=function(){
+    
+    time=parseInt (document.getElementById("choix_semaine").options[document.getElementById('choix_semaine').selectedIndex].value );  // 1 heure * 24 => 1 jour * 7 => 1 semaine * 1000 => 1 semaine en millisecondes
+    document.getElementById('time').value=time/1000;
+    create_table(time);
+    recup_event(time);
+}
+
+
 
 
 //BootstrapDialog.confirm('Hi Apple, are you sure?');
@@ -198,6 +224,8 @@ function change(n_event){
             document.getElementById("date_fin_evenement").value=resultat[n_event].date_end;
             
             document.getElementById("type").value=1;
+            
+            document.getElementById("creator").value=resultat[n_event].creator;
             document.getElementById("id_event").value=resultat[n_event].id_event;
             
             document.getElementById("debut_evenement").innerHTML=resultat[n_event].date_start;
@@ -221,6 +249,7 @@ function sup(n_event){
         if(confirmation){
             document.getElementById("type").value=2;
             document.getElementById("id_event").value=resultat[n_event].id_event;
+            document.getElementById("creator").value=resultat[n_event].creator;
             document.getElementById("valider").click();        
         }
     });
@@ -275,9 +304,29 @@ function min_action(){
 
 
 
+function create_select(time){
+    var select=document.getElementById('choix_semaine');
+    select.innerHTML="";
+    for(var i = -4 ; i<=4 ; i++){
+        var option=document.createElement('option');
+            option.value= time + (i *7 * 24 * 3600 * 1000);
+            option.innerHTML=formatage_date_inverse(   time + (i *7 * 24 * 3600 * 1000)  ) ;
+                if(i==0){
+                    var attribut = document.createAttribute('selected');
+                    option.setAttributeNode(attribut);
+                }
+        select.appendChild(option);
+    }
+}
+
+
+
+
+
 
 
 function create_table(time){
+    create_select(time);
 
     for(var i=0;i<7;i++) date[i]=new Date( this.time+(3600*24*1000*i) );
     
@@ -290,16 +339,7 @@ function create_table(time){
         
     for(var i=0;i<7;i++){
         var th=document.createElement('th');
-        th.innerHTML=semaine[i]+'     ';
-        
-            if(date[i].getDate()<10) th.innerHTML+='0'+date[i].getDate();
-            else th.innerHTML+=date[i].getDate();
-            
-            var mois=date[i].getMonth()+1; //Java script retourne le mois entre 0 et 11, on formate la valeur du mois
-            if(mois<10) th.innerHTML+='/0'+mois;
-            else th.innerHTML+='/'+mois;
-            
-            th.innerHTML+='/'+date[i].getFullYear();
+        th.innerHTML=semaine[i]+'     '+formatage_date_inverse( date[i] );
             
         tr.appendChild(th);
     }
@@ -350,6 +390,33 @@ var heure_formater;
 
 
 
+
+function formatage_date_inverse(date_non_formater){
+    date_non_formater=new Date( date_non_formater );
+    var date_formater;
+            if(date_non_formater.getDate()<10) date_formater='0'+date_non_formater.getDate();
+            else date_formater=date_non_formater.getDate();
+            
+            var mois=date_non_formater.getMonth()+1; //Java script retourne le mois entre 0 et 11, on formate la valeur du mois
+            if(mois<10) date_formater+='/0'+mois;
+            else date_formater+='/'+mois;
+            
+            date_formater+='/'+date_non_formater.getFullYear();
+            return date_formater;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 function formatage_date(date_non_formater){
     date_non_formater=new Date( date_non_formater );
     var date_formater;
@@ -389,7 +456,7 @@ function formatage_heure(heure_non_formater){
 
 
 
-
+ 
 function recup_event(time_debut){
     var date_debut=new Date(time_debut);
     var date_fin=new Date(time_debut + (3600 * 24 * 7 * 1000 ) );
@@ -397,7 +464,7 @@ function recup_event(time_debut){
     
     
     var xhr=new XMLHttpRequest();
-    xhr.open("POST","/recup_event");
+    xhr.open("POST","/calendrier/recup_event");
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     
     xhr.onload=function(){

@@ -7,8 +7,6 @@ $.urlParam = function(name){
 var erreur=$.urlParam('erreur'); // name
 
 
-
-
 switch (erreur) {
     case "1":
         alert("echec lors de l'authentification login/mot de passe incorrect");
@@ -33,7 +31,11 @@ switch (erreur) {
     case "6":
         alert("echec, lors de la mise a jour en BDD");
         break;
+    case "7":
+        alert("echec, arrete de jouer avec le JS ");
+        break;
     
     default:
-        alert("echec, erreur non attendu");
+        alert("echec, erreur non attendu");  
 }
+window.location.search="";
