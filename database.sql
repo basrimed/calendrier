@@ -26,13 +26,17 @@ creator int REFERENCES users(id_user)
 
 CREATE TABLE modif(
 title_calendrier char(20) REFERENCES events(title_calendrier) PRIMARY KEY,
-valeur int DEFAULT 0
+valeur int DEFAULT 1
 
 );
 
 
 
 
+
+
+
+/*
                       <!--  <table class="col-sm-12" > 
                             <tr>
                                 <th>Login</th>

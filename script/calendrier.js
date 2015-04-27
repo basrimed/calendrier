@@ -109,7 +109,7 @@ var y;
 var date_debut_evenement;
 var date_fin_evenement;
 
-//On stocke les derniere action d'un utilisateur, pour pouvoir les annuler.
+//On stocke les dernieres action d'un utilisateur, pour pouvoir les annuler.
 var action=new Array();
 
 document.getElementById("calendrier").onmousedown=function(e){
@@ -446,7 +446,7 @@ function recup_event(time_debut){
                                         
                                     //$(".pop").popover({html:true});
                                     //$("#pop"+resultat[k].id_event).popover({html:true});
-                                    setTimeout( function(){  $(".pop").popover({html:true});    },2*1000);
+                                    setTimeout( function(){  $(".pop").popover({html:true});    },2*1000); 
                                     
                                 calendrier[j][i].innerHTML+="<br><b>createur:</b> "+resultat[k].creator+" <br><b>Titre: </b>"+resultat[k].title_event+" <br> <b>Description: </b>"+resultat[k].description;
 

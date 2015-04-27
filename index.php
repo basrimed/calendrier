@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_set('Europe/Paris');
+date_default_timezone_set('Europe/Paris');//fuseau horraire 
 
 // On charge le framework Silex
 require_once 'silex/vendor/autoload.php';
@@ -33,7 +33,7 @@ $app->match("/",function(Application $app){
     if( $app['session']->get('calendar') )  return $app->redirect("/".$app['session']->get('calendar'));
     //$app['session']->set('calendar','test');
   //  return   $app['session']->get('calendar')  ; //return $app->redirect("/".$app['session']->get('calendar'));
-    else return $app->redirect("/test") ;
+    else return $app->redirect("/defaut") ;
 });
   
   
@@ -119,8 +119,8 @@ $app->match("/calendrier/signup",function(Application $app,Request $req){
         if($var=='update') $r_update=1;
         if($var=='delete') $r_delete=1;
     }
-    
-    if( $login=="" || $password1!=$password2 ) $app->redirect("?erreur=2");
+
+    if( $login=="" || $password1!=$password2 ) return $app->redirect("?erreur=2");
     $password=sha1($password1);
     
     try{
