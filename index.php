@@ -44,9 +44,12 @@ $app->match("/{a}",function(Application $app,Request $req,$a){
 
     if($a!="favicon.ico")    $app['session']->set('calendar', $a  );
 
-    $metode_formulaire=$req->getmethod();/*****************************/
-    if($metode_formulaire=='GET') return $app['twig']->render("calendrier.html",array("time"=>strtotime("last Monday") ,"level"=>$app['session']->get('level') , "calendrier"=>$a ) ); //date("Y-m-d H:i:s")
-    
+    $metode_formulaire=$req->getmethod();
+    if($metode_formulaire=='GET') {
+        if( date("D")=="Mon" )          $lundi=strtotime("Monday");
+        else                            $lundi=strtotime("last Monday");
+        return $app['twig']->render("calendrier.html",array("time"=>$lundi ,"level"=>$app['session']->get('level') , "calendrier"=>$a ) ); //date("Y-m-d H:i:s")
+    }
     
     
     $level=$app['session']->get('level');
@@ -121,13 +124,13 @@ $app->match("/calendrier/signup",function(Application $app,Request $req){
     }
 
     if( $login=="" || $password1!=$password2 ) return $app->redirect("?erreur=2");
-    $password=sha1($password1);
+    $password=sha1($password1);//fonction de hachage 
     
     try{
         $q=$app['db']->prepare("INSERT INTO users (login,password,level,r_create,r_update,r_delete,date_create)
                                     VALUES(?,?,?,?,?,?,?)");
         $q->execute( array($login,$password,0,$r_create,$r_update,$r_delete,date("Y-m-d H:i:s") ) );
-    }catch(Doctrine\DBAL\DBALException $e){
+    }catch(Doctrine\DBAL\DBALException $e){//Gestion des exceptions 
         return $app->redirect("?erreur=3");
     }
     
@@ -207,7 +210,7 @@ $app->match("/calendrier/signin",function(Application $app,Request $req){
     $r_delete=$reponse['r_delete'];
     $id=$reponse['id_user'];
     $password=$reponse['password'];
-    $date_create=$reponse['date_create'];
+    $date_create=$reponse['date_create']; 
     
     $app['session']->set('login',$login);
     $app['session']->set('r_update',$r_update);
@@ -400,6 +403,30 @@ $app->match("/calendrier/add_calendrier",function(Application $app,Request $req)
         return $app->redirect("?erreur=3");
     }  
 });
+
+
+
+
+
+
+
+
+
+
+$app->match("/calendrier/sup_user",function(Application $app,Request $req){
+    $metode_formulaire=$req->getmethod();
+    if($metode_formulaire=="GET") return $app->redirect('/');
+    
+    $id_user=htmlspecialchars ($req->get('id_user') );
+    try{
+                $q=$app['db']->prepare("DELETE FROM users  WHERE id_user=?");
+                $q->execute( array( $id_user )  );
+    }catch(Doctrine\DBAL\DBALException $e){
+        return $app->redirect("?erreur=3");
+    }
+    return 1;
+});
+
 
 
 

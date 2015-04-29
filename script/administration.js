@@ -107,6 +107,10 @@ $("#reboot").onclick=function(e){
 }
 
 
+$("#lance_recherche").onclick=function () {
+    liste();
+}
+
 
 
 
@@ -121,6 +125,7 @@ function liste(){
     var attribut;
     var checkbox;
     var span;
+    var sup;
     var xhr=new XMLHttpRequest();
     xhr.open("GET","/calendrier/recherche_utilisateur?r="+$("#recherche").value+"&r_create="+r_create+"&r_update="+r_update+"&r_delete="+r_delete+"&niveau="+$('#niveau').value+"&order="+order,true);
     xhr.responseType = 'json';
@@ -155,8 +160,20 @@ function liste(){
             
             lig=document.createElement('tr');
             
-            col=document.createElement('td'); 
-            col.innerHTML=resultat[temp].login;
+            col=document.createElement('td');   //glyphicon glyphicon-remove-circle
+                sup=document.createElement('a');
+                sup.className='deleteuser glyphicon glyphicon-remove-circle';
+                //sup.href='/calendrier/sup';
+                sup.setAttribute('data-sup_id',resultat[temp].id_user);
+                sup.setAttribute('onclick','supuser(this)');
+                 
+                /*    attribut = document.createAttribute('data-sup_id');
+                    attribut.nodeValue = resultat[temp].id_user;
+                    sup.setAttributeNode(attribut);
+            */
+            col.appendChild(sup);
+            col.innerHTML+=resultat[temp].login;
+            
             lig.appendChild(col);
             
             col=document.createElement('td');
@@ -345,6 +362,27 @@ function ordre(e){
 
 
 
+
+
+
+function supuser(e){
+     BootstrapDialog.confirm("veuillez confirmer la suppression de l'utilisateur",function(results){
+                                                        if(results){
+                                                                var id_user=e.dataset['sup_id'];
+                                                                var xhr=new XMLHttpRequest();
+                                                                xhr.open("POST","/calendrier/sup_user")
+                                                                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                                                xhr.onload=function(){
+                                                                 if(xhr.response==1){
+                                                                     liste();
+                                                                     }
+                                                                }
+                                                                xhr.send("id_user="+id_user);
+                                                        }
+                                                    });
+
+    
+}
 
 
 

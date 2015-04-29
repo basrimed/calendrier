@@ -1,6 +1,6 @@
 var time; //time est initialisé dynamiquement sur la page html
 var level; //level est initialisé dynamiquement sur la page html
-time=(time*1000); //on formate la date en millisecondes
+time=(time*1000); //on formate la date en milliseconde
 
 
 var date=[];
