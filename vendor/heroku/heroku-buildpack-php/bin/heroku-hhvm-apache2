@@ -8,7 +8,7 @@ set -eu
 shopt -s extglob
 # for detecting when -l 'logs/*.log' matches nothing
 shopt -s nullglob
-
+  
 verbose=
 
 php_passthrough() {
