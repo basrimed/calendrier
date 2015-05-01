@@ -4,10 +4,8 @@
         <title>Connexion Calendrier</title>
         <meta charset="UTF-8"/>
         <link rel="stylesheet" href="style/bootstrap-3.3.4-dist/css/bootstrap.css" type="text/css" />
-        <link rel="stylesheet" href="style/navigation.css" type="text/css" />
         <link rel="stylesheet" href="style/bootstrap-3.3.4-dist/css/bootstrap-dialog.css" type="text/css" />
-        
-        
+        <link rel="stylesheet" href="style/navigation.css" type="text/css" />
         <link rel="stylesheet" href="style/calendrier.css" type="text/css" />
             
                 
@@ -31,7 +29,8 @@
         {% include 'include/navigation.html' %}
     
     
-        <div class="container" id="container" >
+        <div class="container" id="container">
+          
             <div class="row">
                 <div class="col-sm-2">
                     <button id="semainePrecedente" class="btn btn-primary"><span class="glyphicon glyphicon-fast-backward"></span> semaine precedente</button>
@@ -49,10 +48,8 @@
             </div>
             
             
-
             <div class="row">
                 <div class="col-sm-12" id="calendrier" ></div>    
-
             </div>
             
             
@@ -64,10 +61,11 @@
     <div class="modal fade" id="formulaire">
         <div class="modal-dialog">
           <div class="modal-content">
+            
             <div class="modal-header">
-             <!-- <button type="button" class="close" data-dismiss="modal">x</button> -->
               <h4 class="modal-title">Evenement :</h4>
             </div>
+            
             <div class="modal-body">
                 
               <form id='formulaire' method="POST">
@@ -75,11 +73,11 @@
                   <table>
                         <tr>
                           <th>Debut de l'evenement:</th>
-                          <td id="debut_evenement" ></td>
+                          <td>  <span id="debut_evenement" ></span> <a id="up_hours" class='glyphicon glyphicon-chevron-up'></a>  </td>
                         </tr>
                         <tr>
                           <th>Fin de l'evenement:</th>
-                          <td id="fin_evenement" ></td>
+                          <td>  <span id="fin_evenement" ></span> <a id="down_hours" class='glyphicon glyphicon-chevron-down'></a> </td>
                         </tr>
                         <tr>
                           <th>Titre de l'evenement:</th>
@@ -104,11 +102,9 @@
                   <input type="hidden" id="time" name="time" value="{{ time }}"/>
                   <input type="hidden" id="date_debut_evenement" name="date_debut_evenement" value=""/>
                   <input type="hidden" id="date_fin_evenement" name="date_fin_evenement" value=""/>
-
-                
-                
               </form>
             </div>
+            
             <div class="modal-footer">
               <button class="btn btn-info" data-dismiss="modal" onclick="sup_last_action()" >Annuler</button>
             </div>
@@ -138,7 +134,7 @@
     <script type="text/javascript" src="script/bootstrap-tooltip.js"></script>
     <script type="text/javascript" src="script/bootstrap-popover.js"></script>
     <script type="text/javascript" src="style/bootstrap-3.3.4-dist/js/bootstrap.min.js"> </script>
-    <script src="style/bootstrap-3.3.4-dist/js/bootstrap-dialog.js"></script>    
+    <script type="text/javascript" src="style/bootstrap-3.3.4-dist/js/bootstrap-dialog.js"></script>    
     <script type="text/javascript" src="script/erreur.js"></script>
     <script type="text/javascript" src="script/calendrier.js"></script>
 

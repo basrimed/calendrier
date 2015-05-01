@@ -35,20 +35,9 @@ tr{
 }
 
 
-
-/*
-
-#calendrier tr{
-height:20px;
-overflow:hidden;
+#debut_evenement,#fin_evenement{
+    margin-left:5px;
 }
-
-table{
-    table-layout: fixed;
-    height:600px;
-    max-height:600px;
-}
-*/
 
 .down{
     background-color:#E9967A;

@@ -250,6 +250,23 @@ $app->match("/calendrier/recherche_utilisateur",function(Application $app, Reque
     
     //return $login.$r_create.$r_update.$r_delete.$level;
     
+        switch ($order) {
+        case 'logup':
+            $order=" ORDER BY login DESC";
+            break;
+        case 'logdown':
+            $order=" ORDER BY login ASC";
+            break;
+        case 'dateup':  
+            $order=" ORDER BY date_create DESC";  
+            break;
+        case 'dateup':
+            $order=" ORDER BY date_create ASC";
+            break;
+        default:
+            $order="";
+    }
+    
     $where_and=" WHERE ";
     
     if($login=="") $sql="SELECT * FROM users ";
@@ -311,7 +328,7 @@ $app->match("/calendrier/changement_droit",function(Application $app, Request $r
            return $app->redirect('?erreur=3');
         }
         
-        return $app->abort(200,"Ok");
+        return true; //$app->abort(200,"Ok");
 });
 
 
@@ -342,7 +359,7 @@ $app->match("/calendrier/changement_droit_this",function(Application $app, Reque
         }
         $app['session']->set($type,$valeur);
         
-        return $app->abort(200,"Ok");
+        return true;//$app->abort(200,"Ok");
 });
 
 

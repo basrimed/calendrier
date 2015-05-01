@@ -12,7 +12,7 @@ var header=["Login <a data-order='logup' onclick='ordre(this)' class='glyphicon 
 
 window.onload=liste();
 
-$("#recherche").onchange=liste;
+$("#recherche").onchange=liste();
 
 
 
@@ -35,7 +35,7 @@ $("#r_create").onclick=function(e){
         $("#r_create").className="btn btn-default btn-sm";
     }
     liste();
-    return 1;
+    return true;
 }
 
 
@@ -58,7 +58,7 @@ $("#r_update").onclick=function(e){
         $("#r_update").className="btn btn-default btn-sm";
     }
     liste();
-    return 1;
+    return true;
 }
 
 
@@ -82,14 +82,14 @@ $("#r_delete").onclick=function(e){
         $("#r_delete").className="btn btn-default btn-sm";
     }
     liste();
-    return 1;
+    return true;
 }
 
 
 
 $("#niveau").onchange=function(){
     liste();
-    return 1;
+    return true;
 }
 
 
@@ -103,26 +103,24 @@ $("#reboot").onclick=function(e){
  $("#niveau").options[0].selected=true;
  $("#recherche").value="";
  liste();
- return 1;
+ return true;
 }
 
 
 $("#lance_recherche").onclick=function () {
     liste();
+    return true;
 }
 
 
 
 
 
-
+//Cree une liste d'utilisateurs enregistrés, selon les options de recherche
 function liste(){
-    var temp;
-    var lig;
     var col;
     var select;
     var option;
-    var attribut;
     var checkbox;
     var span;
     var sup;
@@ -132,9 +130,8 @@ function liste(){
     xhr.onload=function(event){
         var resultat=xhr.response;
 
-        
         var table=document.createElement('table');
-            lig=document.createElement('tr');
+        var lig=document.createElement('tr');
             
             for(var i=0 ; i<6 ;i++){
                 col=document.createElement('th');
@@ -147,30 +144,24 @@ function liste(){
             if(resultat.length==0){
                 lig=document.createElement('tr');
                     col=document.createElement('td');
-                        attribut = document.createAttribute('colspan');
-                        attribut.nodeValue = 6;
-                        col.setAttributeNode(attribut);
+                    col.setAttribute('colspan','6');
                     col.innerHTML="Pas de resultat";
                 lig.appendChild(col);
                 table.appendChild(lig);
             }
 
             
-        for(temp in resultat){
+        for(var temp in resultat){
             
             lig=document.createElement('tr');
             
-            col=document.createElement('td');   //glyphicon glyphicon-remove-circle
+            col=document.createElement('td');
                 sup=document.createElement('a');
                 sup.className='deleteuser glyphicon glyphicon-remove-circle';
-                //sup.href='/calendrier/sup';
                 sup.setAttribute('data-sup_id',resultat[temp].id_user);
                 sup.setAttribute('onclick','supuser(this)');
                  
-                /*    attribut = document.createAttribute('data-sup_id');
-                    attribut.nodeValue = resultat[temp].id_user;
-                    sup.setAttributeNode(attribut);
-            */
+
             col.appendChild(sup);
             col.innerHTML+=resultat[temp].login;
             
@@ -180,39 +171,28 @@ function liste(){
             
             select=document.createElement('select');
             select.className='level';
-                attribut = document.createAttribute('data-level_id');
-                attribut.nodeValue = resultat[temp].id_user;
-                select.setAttributeNode(attribut);
-                
-                attribut = document.createAttribute('onchange');
-                attribut.nodeValue = 'changement_droit(this)';
-                select.setAttributeNode(attribut);
+
+                select.setAttribute('data-level_id',resultat[temp].id_user);
+                select.setAttribute('onchange','changement_droit(this)');
                 
                 
                 option=document.createElement('option');
                 option.innerHTML='Admin';
-                    if(resultat[temp].level==2){
-                        attribut = document.createAttribute('selected');
-                        option.setAttributeNode(attribut);
-                    }
+                if(resultat[temp].level==2)     option.setAttribute('selected','');
+
                 option.value="2";
                 select.appendChild(option);
                 
                 option=document.createElement('option');
                 option.innerHTML='Normal';
-                    if(resultat[temp].level==1){
-                        attribut = document.createAttribute('selected');
-                        option.setAttributeNode(attribut);
-                    }
+                if(resultat[temp].level==1)  option.setAttribute('selected','');
+
                 option.value="1";
                 select.appendChild(option);
                 
                 option=document.createElement('option');
                 option.innerHTML='Restreint';
-                    if(resultat[temp].level==0){
-                        attribut = document.createAttribute('selected');
-                        option.setAttributeNode(attribut);
-                    }
+                if(resultat[temp].level==0)   option.setAttribute('selected','');
                 option.value="0";
                 select.appendChild(option);
                 
@@ -223,19 +203,11 @@ function liste(){
                 checkbox=document.createElement('input');
                 checkbox.className='create';
                 checkbox.type='checkbox';
-                attribut = document.createAttribute('data-create_id');
-                attribut.nodeValue = resultat[temp].id_user;
-                checkbox.setAttributeNode(attribut);
+                checkbox.setAttribute('data-create_id',resultat[temp].id_user);
+                checkbox.setAttribute('onchange','changement_droit(this)');
                 
-                attribut = document.createAttribute('onchange');
-                attribut.nodeValue = 'changement_droit(this)';
-                checkbox.setAttributeNode(attribut);
+                if(resultat[temp].r_create==2)   checkbox.setAttribute('checked','');
                 
-                
-                    if(resultat[temp].r_create==2){
-                        attribut = document.createAttribute('checked');
-                        checkbox.setAttributeNode(attribut);
-                    }
                 if(resultat[temp].r_create==1){
                     span=document.createElement('span');
                     span.className='rond';
@@ -251,24 +223,17 @@ function liste(){
                 checkbox.className='update';
                 /**///checkbox.innerHTML='*';
                 checkbox.type='checkbox';
-                attribut = document.createAttribute('data-update_id');
-                attribut.nodeValue = resultat[temp].id_user;
-                checkbox.setAttributeNode(attribut);
+                checkbox.setAttribute('data-update_id',resultat[temp].id_user);
+                checkbox.setAttribute('onchange','changement_droit(this)');
                 
-                attribut = document.createAttribute('onchange');
-                attribut.nodeValue = 'changement_droit(this)';
-                checkbox.setAttributeNode(attribut);
+                if(resultat[temp].r_update==2)  checkbox.setAttribute('checked','');
                 
-                    if(resultat[temp].r_update==2){
-                        attribut = document.createAttribute('checked');
-                        checkbox.setAttributeNode(attribut);
-                    }
                 if(resultat[temp].r_update==1){
                     span=document.createElement('span');
                     span.className='rond';
                     span.appendChild(checkbox);
                     col.appendChild(span);
-                }
+                    }
                 else col.appendChild(checkbox);
             lig.appendChild(col);
             
@@ -277,18 +242,11 @@ function liste(){
                 checkbox=document.createElement('input');
                 checkbox.className='delete';
                 checkbox.type='checkbox';
-                attribut = document.createAttribute('data-delete_id');
-                attribut.nodeValue = resultat[temp].id_user;
-                checkbox.setAttributeNode(attribut);
+                checkbox.setAttribute('data-delete_id',resultat[temp].id_user);
+                checkbox.setAttribute('onchange','changement_droit(this)');
                 
-                attribut = document.createAttribute('onchange');
-                attribut.nodeValue = 'changement_droit(this)';
-                checkbox.setAttributeNode(attribut);
-                        
-                    if(resultat[temp].r_delete==2){
-                        attribut = document.createAttribute('checked');
-                        checkbox.setAttributeNode(attribut);
-                    }
+                if(resultat[temp].r_delete==2)    checkbox.setAttribute('checked','');
+                
                 if(resultat[temp].r_delete==1){
                     span=document.createElement('span');
                     span.className='rond';
@@ -316,7 +274,7 @@ function liste(){
 
 
 
-//L'administrateur decide de changer un droit sur un utilisateur
+//L'administrateur décide de changer un droit sur un utilisateur
 function changement_droit(e){
     var classe=e.className;
     var xhr= new XMLHttpRequest();
@@ -331,31 +289,17 @@ function changement_droit(e){
         
     else if (classe=='level')   xhr.send("type="+classe+"&id="+e.dataset['level_id']+"&valeur="+e.value);
         
-    else ;
-    return 1;
+    else return false;
+    
+    return true;
     
 }
 
 
 
-//On ait appelle a cette fonction depuis HTML
+//Gestion des fleches qui font le trie du resultat
 function ordre(e){
-    switch (e.dataset.order) {
-        case 'logup':
-            order=" ORDER BY login DESC";
-            break;
-        case 'logdown':
-            order=" ORDER BY login ASC";
-            break;
-        case 'dateup':
-            order=" ORDER BY date_create DESC";
-            break;
-        case 'dateup':
-            order=" ORDER BY date_create ASC";
-            break;
-        default:
-            order="";
-    }
+    order=e.dataset.order;
     liste();
     return 1;
 }
@@ -383,13 +327,5 @@ function supuser(e){
 
     
 }
-
-
-
-
-
-
-
-
 
 

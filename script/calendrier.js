@@ -28,7 +28,7 @@ modification_o_n();
 
 
 //Fonction qui interroge la BDD pour voir s'il y a eu des modifications sur un calendrier
-//si oui, on charge les eveenements de la semaine visité par l'utilisateur.
+//si oui, on charge les evenenements de la semaine visité par l'utilisateur.
 //si l'utilisateur fait appel à un calendrier qui n'existe pas on lui propose de créer le calendrier
 
 function modification_o_n(){
@@ -92,9 +92,9 @@ document.getElementById("semainePrecedente").onclick=function(){
 }
 
 
-//Fonction pour chaner la semaine (la semaine est choisie via une liste de date), on charge les événements de la nouvelle semaine sélectionnée
+//Fonction pour changer de semaine (la semaine est choisie via une liste de date), on charge les événements de la nouvelle semaine sélectionnée
 document.getElementById("choix_semaine").onchange=function(){
-    time=parseInt (document.getElementById("choix_semaine").options[document.getElementById('choix_semaine').selectedIndex].value );  // 1 heure * 24 => 1 jour * 7 => 1 semaine * 1000 => 1 semaine en millisecondes
+    time=parseInt (document.getElementById("choix_semaine").options[document.getElementById('choix_semaine').selectedIndex].value );  
     document.getElementById('time').value=time/1000;
     create_table(time);
     recup_event(time);
@@ -109,7 +109,7 @@ var y;
 var date_debut_evenement;
 var date_fin_evenement;
 
-//On stocke les dernieres action d'un utilisateur, pour pouvoir les annuler.
+//On stocke les dernieres action d'un utilisateur, pour pouvoir les annuler  c.a.d décolorer les cases coloré pendant la selection d'un evenement
 var action=new Array();
 
 document.getElementById("calendrier").onmousedown=function(e){
@@ -124,11 +124,11 @@ document.getElementById("calendrier").onmousedown=function(e){
         modal_o_n=0;
     }
     
-    //si l'utilisateur click sur un evenement deja créé, on fait rien on sort
-    if( cellule.className=='pop' || cellule.dataset['clic']=='nan' ) return 0;
+    //si l'utilisateur click sur un evenement deja créé, on fait rien, on sort
+    if( cellule.className=='pop' || cellule.dataset['clic']=='nan' || cellule.className=='down' ) return 0;
     
     
-    //gestion des droits qu'a un utilisateur sur un calendrier
+    //gestion des droits de  l'utilisateur sur un calendrier
     //il y a d'autres vérifications côté serveur, si jamais l'utilisateur manipule du JS
     if( level!="0" && level!="1" && level!="2"  ) {
         BootstrapDialog.alert('Veuillez vous connectez pour pouvoir interagire avec le calendrier !!');
@@ -152,7 +152,7 @@ document.getElementById("calendrier").onmousedown=function(e){
     
     //si tous est bon pour ce bouton gauche, on commence a selectioner un nouveau evenement
     //On stocke les informations utile pour la suite
-    //On passe de l'etat "neutre" a "en train de selectioner un nouveau evenement"
+    //On passe de l'etat(etat_souris) "neutre" a "en train de selectioner un nouveau evenement"
     date_debut_evenement=cellule.dataset['date_heure'];
     date_fin_evenement=cellule.dataset['date_heure'];
         var x=cellule.dataset['x'];
@@ -165,13 +165,14 @@ document.getElementById("calendrier").onmousedown=function(e){
 
 
 //si on est dans l'etat "en train de selectioner un nouveau evenement", 
-//l'action de cette fonction veut dire que l'utilisateur alonge la durré de l"evenement 
+//l'action de cette fonction veut dire que l'utilisateur alonge la durée de l'evenement 
 document.getElementById("calendrier").onmouseover=function(e){
     if(etat_souris!=1) return 0;
 
         var cellule=e.target;
         var x=cellule.dataset['x'];
         var j=cellule.dataset['y'];
+        
            
             //l'utilisateur change de jour(basculement d'une colonne vers une autre), on annule la sélection
             if(y!=j){
@@ -180,14 +181,22 @@ document.getElementById("calendrier").onmouseover=function(e){
                 return -1;
             }
                 
+                
+            //si l'utilisateur repasse sur une case deja selectionné , on ne fait rien
+            if( valeur_existe_action(x) ) return -1;
+                
             //l'utilisateur entre en collision avec un autre evenement, on annule la selection 
             if(cellule.className=='down') { // && etat_souris==1){
                 sup_last_action();
-                BootstrapDialog.alert('Veuillez ne pas heurter d\'autre Evenement !!');
+                BootstrapDialog.alert("Veuillez ne pas heurter d'autre Evenement !!");
                 return -1;
             }
-    calendrier[x][y].className='down';
-    action.push(x);
+            
+            
+            
+        //si tout est bon on peut ajouter cette case a la sélection de l'événement   
+        calendrier[x][y].className='down';
+        action.push(x);
         if( calendrier[x][y].dataset['date_heure'] > date_fin_evenement ) date_fin_evenement=calendrier[x][y].dataset['date_heure'];
         if( calendrier[x][y].dataset['date_heure'] < date_debut_evenement ) date_debut_evenement=calendrier[x][y].dataset['date_heure'];
 }
@@ -195,10 +204,12 @@ document.getElementById("calendrier").onmouseover=function(e){
 
 
 
-//si on est dans l'etat "en train de selectioner un nouveau evenement", 
-// et que le bouton de la souris est relaché => l'utilisateur a créer un evenement, 
-//il ne lui reste plus qu'à remplir les informations lié à cet événement.
-//l'utilisateur a toujours la possibilité d'annuler cet événement.
+/*
+si on est dans l'etat "en train de selectioner un nouveau evenement", 
+et que le bouton de la souris est relaché =>l'utilisateur a fini de sélectionner un nouvel événement,
+il ne lui reste plus qu'à remplir les informations lié à cet événement.
+l'utilisateur a toujours la possibilité d'annuler l'événement.
+*/
 document.querySelector("body").onmouseup=function(e){
             if(etat_souris==0) return -1;
             etat_souris=0;
@@ -226,9 +237,105 @@ document.querySelector("body").onmouseup=function(e){
 
 
 
+
+
+/*
+document.querySelector('#up_hours').onclick=function(){
+    
+    
+        if(document.querySelector('#type').value=='0'){    
+            var haut=document.querySelector('#date_debut_evenement');
+            var cellule=document.querySelector("td[data-date_heure='"+haut.value+"']");
+            var max=date_fin_evenement_proche( haut.value);
+            var x=cellule.dataset['x'];
+            var y=cellule.dataset['y'];
+            //x--;
+            alert(max);
+        
+   
+    }
+
+}
+*/
+
+
+
+
+
+
+document.querySelector('#down_hours').onclick=function(){
+
+    if(document.querySelector('#type').value=='0'){       
+        var bas=document.querySelector('#date_fin_evenement');
+        var cellule=document.querySelector("td[data-date_heure='"+bas.value+"']");
+        var x=cellule.dataset['x'];
+        var y=cellule.dataset['y'];
+        x++;
+            if( x>47 || calendrier[x][y].className=='down' ) BootstrapDialog.alert("Vous avez atteint une limite");
+            else
+            {
+                calendrier[x][y].className='down';
+                action.push(x);
+            document.getElementById("date_fin_evenement").value=calendrier[x][y].dataset['date_heure'];
+            document.getElementById("fin_evenement").innerHTML=calendrier[x][y].dataset['date_heure'];
+            }
+    }
+   
+    //document.querySelector('td[data-date='+bas.+']');
+}
+
+
+
+
+/*
+ function date_fin_evenement_proche(date_d){ 
+     var i=resultat.length;
+     var proche=formatage_date( date[0] )+" 00:00:00" ;
+     var change="";
+     
+     for(var j=0;j<i;j++){ var rr=new Date (resultat[j].date_end); alert(rr  );
+        // alert(resultat[j].date_end);
+        if(change!= Date(resultat[j].date_end).getDate() ){
+            change= Date(resultat[j].date_end).getDate();
+            proche=formatage_date( date[j] )+" 00:00:00";
+        }
+         if (  resultat[j].date_end < date_d  &&  resultat[j].date_end > proche  ) {
+             proche=resultat[j].date_start;
+         }
+     }
+     
+        var cellule=document.querySelector("td[data-date_heure='"+proche+"']");
+        var x=cellule.dataset['x'];
+        var span=cellule.getAttribute('rowspan');
+        //var y=cellule.dataset['y'];
+        return x-(-span);
+ }
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Fonction utilisé pour pouvoir modifier un evenement.
 //Qui peut modifier un evenement? => un admin, le propriétaire de l'evenement, des utilisateurs à qui on a donné
-//le droit de modifier des événements qui ne leur appartiennent pas.
+//le droit de modifier des événements qui ne leur appartiennent pas (compte modérateur).
 function change(n_event){
             document.getElementById("date_debut_evenement").value=resultat[n_event].date_start;
             document.getElementById("date_fin_evenement").value=resultat[n_event].date_end;
@@ -252,7 +359,7 @@ function change(n_event){
 
 
 
-//meme chose que la fonction chane() mais cette fois c'est pour la suppression
+//meme chose que la fonction change() mais cette fois c'est pour la suppression
 function sup(n_event){
     BootstrapDialog.confirm("confirmer la suppression de l\'evenement",function(confirmation){
         if(confirmation){
@@ -268,11 +375,7 @@ function sup(n_event){
 
 
 
-
-
-
-
-//Fonction qui supprime les dernières actions d'un utilisateur
+//Fonction qui supprime les dernières actions d'un utilisateur c.a.d décoloré les cases selectionées
 function sup_last_action(){
         for(var i in action)   calendrier[ action[i] ] [y].className='';  
         action=new Array();
@@ -282,11 +385,19 @@ function sup_last_action(){
 
 
 
+function valeur_existe_action(x){
+        for(var i in action)   {
+             if( action[i] ==x ) return true;  
+        }
+        return false;
+}
 
 
 
-//Un utilisateur peut commencer à sélection un événement soit en partant par l'as ou par le haut
-//on doit don récupérer la date min et Max de l'ensemble des cases selectioner par l'utilisateur
+
+
+//Un utilisateur peut commencer à sélection un événement soit en partant par le bas ou par le haut
+//on doit donc récupérer la date min et Max de l'ensemble des cases selectioner par l'utilisateur
 function max_action(){
     var max=-1;
     for(var i in action){
@@ -316,10 +427,8 @@ function create_select(time){
         var option=document.createElement('option');
             option.value= time + (i *7 * 24 * 3600 * 1000);
             option.innerHTML=formatage_date_inverse(   time + (i *7 * 24 * 3600 * 1000)  ) ;
-                if(i==0){
-                    var attribut = document.createAttribute('selected');
-                    option.setAttributeNode(attribut);
-                }
+                if(i==0){ option.setAttribute('selected','') ;
+            }
         select.appendChild(option);
     }
 }
@@ -338,44 +447,40 @@ function create_table(time){
     var table=document.createElement('table');
     
     var tr=document.createElement('tr');
-        th=document.createElement('th');
+    var th=document.createElement('th');
         th.innerHTML='Date/heure ';
     tr.appendChild(th);
         
     for(var i=0;i<7;i++){
-        var th=document.createElement('th');
+        th=document.createElement('th');
         th.innerHTML=semaine[i]+'     '+formatage_date_inverse( date[i] );
             
         tr.appendChild(th);
     }
     table.appendChild(tr);
     
-    
 var heure=0;
 var minute="";
-for(var i=0;i<48;i++){
-var heure_formater;
-    tr=document.createElement('tr');
-        var td=document.createElement('td');
+
+    for(var i=0;i<48;i++){
+    var heure_formater;
+        tr=document.createElement('tr');
+            var td=document.createElement('td');
         
-        if(heure<10) heure_formater="0"+heure;
-        else  heure_formater=heure;
-        
+        heure_formater = (heure<10) ? "0"+heure : heure ;
         td.innerHTML=heure_formater;
-            if(i%2==0)     minute=':00:00';
-            else           minute=':30:00';
-            td.innerHTML+=minute;
+
+        minute = (i%2==0)  ? ':00:00' : ':30:00' ;
+        td.innerHTML+=minute;
         
-    tr.appendChild(td);
+        tr.appendChild(td);
     
-    calendrier[i]=[];
-    for(var j=0;j<7;j++){
-        
-        calendrier[i][j]=document.createElement('td') ;//td=document.createElement('td');
+        calendrier[i]=[];
+        for(var j=0;j<7;j++){
+            calendrier[i][j]=document.createElement('td') ;
             calendrier[i][j].dataset['x']=i;
             calendrier[i][j].dataset['y']=j;
             calendrier[i][j].dataset['date_heure']=formatage_date(date[j])+" "+heure_formater+""+minute ;            
-                
        tr.appendChild(calendrier[i][j]);
         }
         
@@ -386,6 +491,10 @@ var heure_formater;
 document.getElementById("calendrier").innerHTML="";  
 document.getElementById("calendrier").appendChild(table);
 }
+
+
+
+
 
 
 
@@ -416,7 +525,6 @@ function recup_event(time_debut){
                         if(  (new Date()  <  new Date(resultat[k].date_start)) && getCookie('last_alert')==resultat[k].id_event ) evenement_proche=0;
                         if(  (new Date()  <  new Date(resultat[k].date_start)) && getCookie('last_alert')!=resultat[k].id_event && evenement_proche!=0){
                         evenement_proche =   new Date(resultat[k].date_start) - new Date()   ;
-                        
                         evenement_proche-=30 * 60 * 1000 ;
                         if (evenement_proche<0) evenement_proche=0;
                         
@@ -424,10 +532,8 @@ function recup_event(time_debut){
                             BootstrapDialog.alert("Un Evenement se deroule dans moins de 15 minute !!" );
                         },evenement_proche);
                         evenement_proche=0;
-
                         
-                            document.cookie="last_alert="+resultat[k].id_event;
-                             //alert(getCookie('last_alert'));
+                        document.cookie="last_alert="+resultat[k].id_event;
                         }
                                   
                                 calendrier[j][i].className="down";       //rel
@@ -461,11 +567,7 @@ function recup_event(time_debut){
                     }
                     
                     if(calendrier[j][i].dataset['date_heure'] == resultat[k].date_end && modification_en_cour==1 ) {
-                        
-                              var attribut = document.createAttribute('rowspan');
-                                attribut.nodeValue = j - j_debut +1 ;
-                                calendrier[j_debut][i_debut].setAttributeNode(attribut);
-                
+                                calendrier[j_debut][i_debut].setAttribute('rowspan',j - j_debut +1);
                                 modification_en_cour=0;
                                 k++;
                     }

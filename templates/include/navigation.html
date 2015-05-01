@@ -1,6 +1,3 @@
-   
-   
-   
    <nav class="navbar navbar-inverse">
           <div class="navbar-header">
             <a class="navbar-brand" href="/">CALENDRIER</a>
@@ -13,24 +10,23 @@
             
             
             {% if app.session.get('level') is defined and app.session.get('level')==2 %}
-            <li class="active"> <a href="/calendrier/administration">Administration </a> </li>
+            <li> <a href="/calendrier/administration">Administration </a> </li>
             {% elseif app.session.get('level') is null %}
-            <li class="active"> <a href="/calendrier/signup">Créer un compte </a> </li>
+            <li > <a href="/calendrier/signup">Créer un compte </a> </li>
             {% endif %}
             
+            
+            <li> <a href="/calendrier/tuto">Tuto</a> </li>
             <li> <a href="/calendrier/propos">A propos !</a> </li>
-            
-            
-              
-              
           </ul>
+          
           
           {% if app.session.get('login') is not defined or app.session.get('login') is null  %}
           <form class="navbar-form navbar-right inline-form" method="POST" action="/calendrier/signin">
             <div class="form-group">
               <input type="text" class="input-sm form-control" placeholder="login" name="login">
                <input type="password" class="input-sm form-control" placeholder="mot de passe" name="password">
-              <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-eye-open"></span> Se connecter</button>
+              <button type="submit" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-eye-open"></span> Se connecter</button>
             </div>
           </form>
           {% endif %}
@@ -41,7 +37,6 @@
           {% if app.session.get('login') is defined  and app.session.get('login') is not null %}
           <form class="navbar-form navbar-right inline-form" method="POST" action="/calendrier/signout">
             <div class="form-group">
-             <!-- <span class="label label-info" id="lastco">Derniere connexion:{{ app.session.get('lastco') }}</span> -->
               <span class="label label-success" id="affichepseudo">{{app.session.get('login')}}</span>
               
               <!--
@@ -63,10 +58,7 @@
               <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-eye-open"></span> Se deconnecter</button>
             </div>
           </form>
-              
           {% endif %}
-          
- 
     </nav>
     
     
