@@ -258,7 +258,7 @@ $app->match("/calendrier/recherche_utilisateur",function(Application $app, Reque
             $order=" ORDER BY login ASC";
             break;
         case 'dateup':  
-            $order=" ORDER BY date_create DESC";  
+            $order=" ORDER BY date_create DESC";     
             break;
         case 'dateup':
             $order=" ORDER BY date_create ASC";
