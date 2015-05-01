@@ -25,7 +25,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(),
         'password' => '',
         'dbname' => 'c9'  // mettez ici le nom de la base de données
   )));
-   
+    
   
   
   
