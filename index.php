@@ -2,7 +2,7 @@
 date_default_timezone_set('Europe/Paris');//fuseau horraire 
 
 // On charge le framework Silex
-require_once 'silex/vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 // On définit des noms utiles
 use Silex\Application;
