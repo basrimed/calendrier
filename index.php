@@ -1,8 +1,8 @@
-<?php
+<?php   echo "  1  ";
 date_default_timezone_set('Europe/Paris');//fuseau horraire 
 
 // On charge le framework Silex
-require_once 'vendor/autoload.php';   echo "  1  ";
+require_once 'vendor/autoload.php';    echo "  1  ";
 
 // On définit des noms utiles
 use Silex\Application;         echo "  1  ";
