@@ -1,21 +1,15 @@
-# Fichiers de bootstrapping pour les TDs du cours AWS
+# Projet AWS
 
-Ce dépôt contient les fichiers de configuration pour l'installation des
-bibliothèques utilisées dans le cours Applications Web et Sécurité
-<http://defeo.lu/aws>.
+Basri Mohamed
+Imene Zemmouri
 
-## Installation de Silex (PHP)
 
-Il est nécessaire d'avoir installé PHP, version >=5.4.
+# lieu
 
-Pour installer Silex et ses dépendences, taper dans un terminal (Linux)
+UVSQ - UFR des sciences
 
-    ./install.sh
 
-## Installation de Express (JavaScript)
+#annee
 
-Il est nécessaire d'avoir installé Node.js, version >=0.10.
+2014-2015
 
-Pour installer Express et ses dépendences, taper dans un terminal
-
-    npm install
