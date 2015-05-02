@@ -1,5 +1,5 @@
 <?php   echo "  1  ";
-date_default_timezone_set('Europe/Paris');//fuseau horraire 
+//date_default_timezone_set('Europe/Paris');//fuseau horraire 
 
 // On charge le framework Silex
 require_once 'vendor/autoload.php';    echo "  1  ";
