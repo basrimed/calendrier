@@ -1,4 +1,10 @@
 <?php  
+
+if (php_sapi_name() === 'cli-server' && is_file(__DIR__.'/static'.preg_replace('#(\?.*)$#','', $_SERVER['REQUEST_URI']))
+   ) {
+  return false;
+}
+
 date_default_timezone_set('Europe/Paris');//fuseau horraire 
 
 // On charge le framework Silex
