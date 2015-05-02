@@ -1,4 +1,5 @@
 <?php
+echo "55";
 date_default_timezone_set('Europe/Paris');//fuseau horraire 
 
 // On charge le framework Silex
