@@ -28,7 +28,7 @@ class ComposerAutoloaderInit3663aa66e512875efe068f95d1f08ea7
             $loader->set($namespace, $path);
         }
 
-        $map = require __DIR__ . '/autoload_psr4.php';
+        $map = require __DIR__ . '/autoload_psr4.php'; 
         foreach ($map as $namespace => $path) {
             $loader->setPsr4($namespace, $path);
         }
