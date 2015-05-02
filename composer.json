@@ -4,8 +4,5 @@
         "symfony/monolog-bridge": "~2.3",
         "symfony/twig-bridge": "~2.3",
         "doctrine/dbal": ">=2.2.0,<2.4.0-dev"
-    },
-   "require-dev": {
-    "heroku/heroku-buildpack-php": "*"
-  }
+    }
 }
