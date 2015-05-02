@@ -2,20 +2,20 @@
 date_default_timezone_set('Europe/Paris');//fuseau horraire 
 
 // On charge le framework Silex
-require_once 'vendor/autoload.php';
+require_once 'vendor/autoload.php';   echo "  1  ";
 
 // On définit des noms utiles
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation as HTTP;
+use Silex\Application;         echo "  1  ";
+use Symfony\Component\HttpFoundation\Request;    echo "  1  ";
+use Symfony\Component\HttpFoundation as HTTP;   echo "  1  ";
 
 // On crée l'application et on la configure en mode debug
-$app = new Application();
+$app = new Application();    echo "  1  ";
 $app['debug'] = true;
 
-$app->register(new Silex\Provider\SessionServiceProvider());
-$app->register(new Silex\Provider\TwigServiceProvider(), 
-               array('twig.path' => 'templates'));
+$app->register(new Silex\Provider\SessionServiceProvider());    echo "  1  ";
+$app->register(new Silex\Provider\TwigServiceProvider(),     echo "  1  ";
+               array('twig.path' => 'templates'));    echo "  1  ";
                /*
 $app->register(new Silex\Provider\DoctrineServiceProvider(),
   array('db.options' => array(
@@ -29,7 +29,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(),
       
   */
   
-  
+     echo "  1  ";
 $app->match("/",function(Application $app){
     if( $app['session']->get('calendar') )  return $app->redirect("/".$app['session']->get('calendar'));
     //$app['session']->set('calendar','test');
