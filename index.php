@@ -27,7 +27,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(),
         'dbname' => 'c9'  // mettez ici le nom de la base de données
   )));
        
-  */
+  */ 
   
  
 $app->match("/",function(Application $app){
