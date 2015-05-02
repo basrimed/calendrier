@@ -28,7 +28,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(),
   )));
        
   */ 
-  
+   
  
 $app->match("/",function(Application $app){
     if( $app['session']->get('calendar') )  return $app->redirect("/".$app['session']->get('calendar'));
