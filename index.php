@@ -19,7 +19,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(),
                /*
 $app->register(new Silex\Provider\DoctrineServiceProvider(),
   array('db.options' => array(
-        'driver'   => 'pdo_mysql',
+        'driver'   => 'pdo_mysql',  
         'host'     => getenv('IP'),  // pas touche à ça.: spécifique pour C9.!
         'user'     => substr(getenv('C9_USER'), 0, 16),  // laissez comme ça, ou mettez
                                                          // votre login à la place
