@@ -454,9 +454,9 @@ function recup_event(time_debut){
                                         
                                     //$(".pop").popover({html:true});
                                     //$("#pop"+resultat[k].id_event).popover({html:true});
-                                    setTimeout( function(){  $(".pop").popover({html:true});    },2*1000); 
+                                    setTimeout( function(){  $(".pop").popover({html:true});    },1000); 
                                     
-                                calendrier[j][i].innerHTML+='<br><b>createur:</b> '+resultat[k].creator+' <br><b>Titre: </b>'+resultat[k].title_event+' <br> <b>Description: </b>'+resultat[k].description;
+                                calendrier[j][i].innerHTML+='<br><b data-clic="nan" >createur:</b> '+resultat[k].creator+' <br><b data-clic="nan" >Titre: </b>'+resultat[k].title_event+' <br> <b data-clic="nan" >Description: </b>'+resultat[k].description;
 
                                 
                                 modification_en_cour=1;
