@@ -1,5 +1,5 @@
 <?php  
-date_default_timezone_set('Europe/Paris');//fuseau horraire 
+date_default_timezone_set('Europe/Paris');//fuseau horraire
 
 // On charge le framework Silex
 require_once __DIR__ . '/vendor/autoload.php';  
@@ -44,6 +44,8 @@ $app->match("/",function(Application $app){
 $app->match("/{a}",function(Application $app,Request $req,$a){
 
     if($a!="favicon.ico")    $app['session']->set('calendar', $a  );
+    
+    $a=htmlentities($a);
 
     $metode_formulaire=$req->getmethod();
     if($metode_formulaire=='GET') {
@@ -64,15 +66,25 @@ $app->match("/{a}",function(Application $app,Request $req,$a){
     $date_fin_evenement=$req->get("date_fin_evenement");
     
     $creator=htmlspecialchars( $req->get("creator") ); 
-    $titre=htmlspecialchars( $req->get("titre") ); 
     $calendrier=htmlspecialchars( $req->get("calendrier") );
     
-    $description=htmlspecialchars( $req->get("description") );
+    $titre=$req->get("titre") ; 
+    $description= $req->get("description") ;
     
     $time=$req->get("time");
     
     $type=$req->get("type");
     $id_event=$req->get("id_event");
+    
+    
+    $titre=strtr($titre, "'", " ");
+    $titre=strtr($titre, '"', ' ');
+    
+    $description=strtr($description, "'", " ");
+    $description=strtr($description, '"', ' ');
+    
+    $description=htmlspecialchars( $description ); 
+    $titre=htmlspecialchars( $titre);
     
         try{
             if($type==0){ 
@@ -110,7 +122,11 @@ $app->match("/calendrier/signup",function(Application $app,Request $req){
     $metode_formulaire=$req->getmethod();
     if($metode_formulaire=='GET') return $app['twig']->render("signup.html",array() );
     
+    
+    
     $login=htmlspecialchars( $req->get('login') );
+    if ( !preg_match("#^([a-z]|[A-Z])([a-z]|[A-Z]|[0-9]){2,10}$#",$login ) ) return $app->redirect("?erreur=3");
+    
     $password1=$req->get('password1');
     $password2=$req->get('password2');
     $droit=$req->get('droit');

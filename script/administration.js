@@ -10,9 +10,9 @@ var header=["Login <a data-order='logup' onclick='ordre(this)' class='glyphicon 
             "<a data-order='datedown' onclick='ordre(this)' class=' order glyphicon glyphicon-arrow-down'></a> "];
             
 
-window.onload=liste();
+window.onload=liste;
 
-$("#recherche").onchange=liste();
+$("#recherche").onchange=liste;
 
 
 

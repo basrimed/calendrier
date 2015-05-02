@@ -1,5 +1,5 @@
-var time; //time est initialisé dynamiquement sur la page html
-var level; //level est initialisé dynamiquement sur la page html
+var time; //time est initialisé dynamiquement sur la page html via twig
+var level; //level est initialisé dynamiquement sur la page html via twig
 time=(time*1000); //on formate la date en milliseconde
 
 
@@ -236,103 +236,6 @@ document.querySelector("body").onmouseup=function(e){
 
 
 
-
-
-
-/*
-document.querySelector('#up_hours').onclick=function(){
-    
-    
-        if(document.querySelector('#type').value=='0'){    
-            var haut=document.querySelector('#date_debut_evenement');
-            var cellule=document.querySelector("td[data-date_heure='"+haut.value+"']");
-            var max=date_fin_evenement_proche( haut.value);
-            var x=cellule.dataset['x'];
-            var y=cellule.dataset['y'];
-            //x--;
-            alert(max);
-        
-   
-    }
-
-}
-*/
-
-
-
-
-
-
-document.querySelector('#down_hours').onclick=function(){
-
-    if(document.querySelector('#type').value=='0'){       
-        var bas=document.querySelector('#date_fin_evenement');
-        var cellule=document.querySelector("td[data-date_heure='"+bas.value+"']");
-        var x=cellule.dataset['x'];
-        var y=cellule.dataset['y'];
-        x++;
-            if( x>47 || calendrier[x][y].className=='down' ) BootstrapDialog.alert("Vous avez atteint une limite");
-            else
-            {
-                calendrier[x][y].className='down';
-                action.push(x);
-            document.getElementById("date_fin_evenement").value=calendrier[x][y].dataset['date_heure'];
-            document.getElementById("fin_evenement").innerHTML=calendrier[x][y].dataset['date_heure'];
-            }
-    }
-   
-    //document.querySelector('td[data-date='+bas.+']');
-}
-
-
-
-
-/*
- function date_fin_evenement_proche(date_d){ 
-     var i=resultat.length;
-     var proche=formatage_date( date[0] )+" 00:00:00" ;
-     var change="";
-     
-     for(var j=0;j<i;j++){ var rr=new Date (resultat[j].date_end); alert(rr  );
-        // alert(resultat[j].date_end);
-        if(change!= Date(resultat[j].date_end).getDate() ){
-            change= Date(resultat[j].date_end).getDate();
-            proche=formatage_date( date[j] )+" 00:00:00";
-        }
-         if (  resultat[j].date_end < date_d  &&  resultat[j].date_end > proche  ) {
-             proche=resultat[j].date_start;
-         }
-     }
-     
-        var cellule=document.querySelector("td[data-date_heure='"+proche+"']");
-        var x=cellule.dataset['x'];
-        var span=cellule.getAttribute('rowspan');
-        //var y=cellule.dataset['y'];
-        return x-(-span);
- }
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Fonction utilisé pour pouvoir modifier un evenement.
 //Qui peut modifier un evenement? => un admin, le propriétaire de l'evenement, des utilisateurs à qui on a donné
 //le droit de modifier des événements qui ne leur appartiennent pas (compte modérateur).
@@ -432,7 +335,6 @@ function create_select(time){
         select.appendChild(option);
     }
 }
-
 
 
 
@@ -554,7 +456,7 @@ function recup_event(time_debut){
                                     //$("#pop"+resultat[k].id_event).popover({html:true});
                                     setTimeout( function(){  $(".pop").popover({html:true});    },2*1000); 
                                     
-                                calendrier[j][i].innerHTML+="<br><b>createur:</b> "+resultat[k].creator+" <br><b>Titre: </b>"+resultat[k].title_event+" <br> <b>Description: </b>"+resultat[k].description;
+                                calendrier[j][i].innerHTML+='<br><b>createur:</b> '+resultat[k].creator+' <br><b>Titre: </b>'+resultat[k].title_event+' <br> <b>Description: </b>'+resultat[k].description;
 
                                 
                                 modification_en_cour=1;
