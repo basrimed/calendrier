@@ -1,5 +1,4 @@
 <?php
-echo "55";
 date_default_timezone_set('Europe/Paris');//fuseau horraire 
 
 // On charge le framework Silex
@@ -17,6 +16,7 @@ $app['debug'] = true;
 $app->register(new Silex\Provider\SessionServiceProvider());
 $app->register(new Silex\Provider\TwigServiceProvider(), 
                array('twig.path' => 'templates'));
+               /*
 $app->register(new Silex\Provider\DoctrineServiceProvider(),
   array('db.options' => array(
         'driver'   => 'pdo_mysql',
@@ -27,7 +27,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(),
         'dbname' => 'c9'  // mettez ici le nom de la base de données
   )));
       
-  
+  */
   
   
 $app->match("/",function(Application $app){
