@@ -14,7 +14,7 @@ $app = new Application();    echo "  1  ";
 $app['debug'] = true;
 
 $app->register(new Silex\Provider\SessionServiceProvider());    echo "  1  ";
-$app->register(new Silex\Provider\TwigServiceProvider(),     echo "  1  ";
+$app->register(new Silex\Provider\TwigServiceProvider(),     
                array('twig.path' => 'templates'));    echo "  1  ";
                /*
 $app->register(new Silex\Provider\DoctrineServiceProvider(),
