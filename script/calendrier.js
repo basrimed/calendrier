@@ -439,7 +439,9 @@ function recup_event(time_debut){
                         }
                                   
                                 calendrier[j][i].className="down";       //rel
-                                calendrier[j][i].innerHTML=" <a class=\"pop\"  rel='popover' id='pop"+resultat[k].id_event+"'  data-original-title=' <h4 class=\"pop\">"+resultat[k].creator+" -- "+resultat[k].title_event+"</h4>' data-content='<p class=\"pop\">"+resultat[k].description+"</p>'> <span data-clic='nan' class='glyphicon glyphicon-eye-open'></span> </a>" ;
+                                calendrier[j][i].innerHTML=" <a class=\"pop\"  rel='popover' id='pop"+resultat[k].id_event+"'  data-original-title=' <h4 class=\"pop\">"+resultat[k].creator+" -- "
+                                                            +resultat[k].title_event+"</h4>' data-content='<p class=\"pop\">"+resultat[k].description+
+                                                            "</p>'> <span data-clic='nan' class='glyphicon glyphicon-eye-open'></span> </a>" ;
                                     
                                 if(level>0){
                                     
@@ -456,7 +458,8 @@ function recup_event(time_debut){
                                     //$("#pop"+resultat[k].id_event).popover({html:true});
                                     setTimeout( function(){  $(".pop").popover({html:true});    },1000); 
                                     
-                                calendrier[j][i].innerHTML+='<br><b data-clic="nan" >createur:</b> '+resultat[k].creator+' <br><b data-clic="nan" >Titre: </b>'+resultat[k].title_event+' <br> <b data-clic="nan" >Description: </b>'+resultat[k].description;
+                                calendrier[j][i].innerHTML+='<br><b data-clic="nan" >createur:</b> '+resultat[k].creator+' <br><b data-clic="nan" >Titre: </b>'
+                                                            +resultat[k].title_event+' <br> <b data-clic="nan" >Description: </b>'+resultat[k].description;
 
                                 
                                 modification_en_cour=1;

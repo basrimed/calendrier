@@ -29,11 +29,19 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(),
         
     
    
+   
+   
+   
+   
  
 $app->match("/",function(Application $app){
     if( $app['session']->get('calendar') )  return $app->redirect("/".$app['session']->get('calendar'));
     else return $app->redirect("/defaut") ;
 });
+  
+  
+  
+  
   
   
   
@@ -115,6 +123,14 @@ $app->match("/{a}",function(Application $app,Request $req,$a){
 
 
 
+
+
+
+
+
+
+
+
 $app->match("/calendrier/signup",function(Application $app,Request $req){
     
     $metode_formulaire=$req->getmethod();
@@ -142,15 +158,19 @@ $app->match("/calendrier/signup",function(Application $app,Request $req){
     $password=sha1($password1);//fonction de hachage 
     
     try{
-        $q=$app['db']->prepare("INSERT INTO users (login,password,level,r_create,r_update,r_delete,date_create)
-                                    VALUES(?,?,?,?,?,?,?)");
-        $q->execute( array($login,$password,0,$r_create,$r_update,$r_delete,date("Y-m-d H:i:s") ) );
+        $q=$app['db']->prepare("INSERT INTO users (login,password,level,r_create,r_update,r_delete,date_create,lastco)
+                                    VALUES(?,?,?,?,?,?,?,?)");
+        $q->execute( array($login,$password,0,$r_create,$r_update,$r_delete,date("Y-m-d H:i:s"),date("Y-m-d H:i:s") ) );
     }catch(Doctrine\DBAL\DBALException $e){//Gestion des exceptions 
         return $app->redirect("?erreur=3");
     }
     
     return $app->redirect("/");
 });
+
+
+
+
 
 
 
@@ -184,9 +204,17 @@ $app->match("/calendrier/compte",function(Application $app,Request $req){
 
 
 
+
+
+
+
 $app->match("/calendrier/propos",function(Application $app,Request $req){ 
     return $app['twig']->render("propos.html",array() );
 });
+
+
+
+
 
 
 
@@ -243,10 +271,18 @@ $app->match("/calendrier/signin",function(Application $app,Request $req){
 
 
 
+
+
+
+
 $app->match("/calendrier/administration",function(Application $app,Request $req){
     if( $app['session']->get('level')!=2 ) return $app->redirect("/");
     return $app['twig']->render('administration.html',array() );
 });
+
+
+
+
 
 
 
@@ -313,6 +349,9 @@ $app->match("/calendrier/recherche_utilisateur",function(Application $app, Reque
 
 
 
+
+
+
 $app->match("/calendrier/changement_droit",function(Application $app, Request $req){
     $metode_formulaire=$req->getmethod();
     if($metode_formulaire=="GET") return $app->redirect('/calendrier/administration');
@@ -349,6 +388,10 @@ $app->match("/calendrier/changement_droit",function(Application $app, Request $r
 
 
 
+
+
+
+
 $app->match("/calendrier/changement_droit_this",function(Application $app, Request $req){
     $metode_formulaire=$req->getmethod();
     if($metode_formulaire=="GET") return $app->redirect('/calendrier/compte');
@@ -379,6 +422,13 @@ $app->match("/calendrier/changement_droit_this",function(Application $app, Reque
 
 
 
+
+
+
+
+
+
+
 $app->match("/calendrier/recup_event",function(Application $app,Request $req){
     $metode_formulaire=$req->getmethod();
     if($metode_formulaire=="GET") return $app->redirect('/');
@@ -399,6 +449,12 @@ $app->match("/calendrier/recup_event",function(Application $app,Request $req){
     return $app->json($reponse);
 
 });
+
+
+
+
+
+
 
 
 $app->match("/calendrier/recup_modif",function(Application $app,Request $req){
@@ -422,6 +478,12 @@ $app->match("/calendrier/recup_modif",function(Application $app,Request $req){
 
 
 
+
+
+
+
+
+
 $app->match("/calendrier/add_calendrier",function(Application $app,Request $req){
     $metode_formulaire=$req->getmethod();
     if($metode_formulaire=="GET") return $app->redirect('/');
@@ -435,6 +497,9 @@ $app->match("/calendrier/add_calendrier",function(Application $app,Request $req)
         return $app->redirect("?erreur=3");
     }  
 });
+
+
+
 
 
 
@@ -471,16 +536,18 @@ $app->match("/calendrier/sup_user",function(Application $app,Request $req){
 
 
 
+
+
 $app->match("/calendrier/signout",function(Application $app,Request $req){
     $app['session']->clear();
-    $app['session']->remove('login');
+  /* $app['session']->remove('login');
     $app['session']->remove('id');
     $app['session']->remove('r_update');
     $app['session']->remove('r_create');
     $app['session']->remove('r_delete');
     $app['session']->remove('level');
-    
-    return $app->redirect('/');//$app['twig']->render("signup.html",array() );
+    */
+    return $app->redirect('/');
     
 });
 
